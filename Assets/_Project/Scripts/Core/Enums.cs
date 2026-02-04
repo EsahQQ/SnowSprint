@@ -8,5 +8,12 @@
             Acceleration,
             Skin
         }
+
+        public enum GameState
+        {
+            Intro,
+            Gameplay,
+            Shop
+        }
     }
 }

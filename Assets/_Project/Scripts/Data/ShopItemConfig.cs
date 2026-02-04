@@ -6,12 +6,12 @@ namespace _Project.Scripts.Data
     [CreateAssetMenu(fileName = "ShopItem", menuName = "SO/New Item")]
     public class ShopItemConfig : ScriptableObject
     {
-        public string Id;
-        public string DisplayName;
-        public int Price;
-        public Sprite Icon;
+        public string id;
+        public string displayName;
+        public int price;
+        public Sprite icon;
 
-        public Enums.UpgradeType Type;
-        public float Value;
+        public Enums.UpgradeType type;
+        public float value;
     }
 }
