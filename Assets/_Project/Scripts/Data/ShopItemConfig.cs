@@ -12,6 +12,5 @@ namespace _Project.Scripts.Data
         public Sprite icon;
 
         public Enums.UpgradeType type;
-        public float value;
     }
 }

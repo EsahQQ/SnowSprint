@@ -29,6 +29,8 @@ namespace _Project.Scripts.Core
         private void Start()
         {
             StartLevel();
+            PlayerPrefs.DeleteAll();
+            PlayerPrefs.Save();
         }
 
         private void StartLevel()
@@ -52,7 +54,7 @@ namespace _Project.Scripts.Core
             Time.timeScale = 0f; 
         }
 
-        private void RestartLevel()
+        public void RestartLevel()
         {
             Time.timeScale = 1f;
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
