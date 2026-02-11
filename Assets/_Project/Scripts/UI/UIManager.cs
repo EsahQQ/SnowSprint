@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Zenject;
@@ -16,6 +17,8 @@ namespace _Project.Scripts.UI
 
         [Header("HUD Elements")]
         [SerializeField] private TextMeshProUGUI coinsText;
+
+        [SerializeField] private CanvasGroup sliders;
 
         [Header("Shop Elements")]
         [SerializeField] private Transform shopContainer; 
@@ -44,6 +47,17 @@ namespace _Project.Scripts.UI
 
             shopPanel.SetActive(false);
             hudPanel.SetActive(true);
+
+            StartCoroutine(HideSliders());
+        }
+
+        private IEnumerator HideSliders()
+        {
+            yield return new WaitForSeconds(2);
+            sliders.DOFade(0, 2).OnComplete(() =>
+            {
+                sliders.gameObject.SetActive(false);
+            });
         }
 
         private void OnDestroy()
