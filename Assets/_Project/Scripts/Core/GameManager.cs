@@ -2,6 +2,7 @@
 using UnityEngine.SceneManagement;
 using System;
 using _Project.Scripts.Utils;
+using DG.Tweening;
 using Zenject;
 
 namespace _Project.Scripts.Core
@@ -56,6 +57,8 @@ namespace _Project.Scripts.Core
 
         public void RestartLevel()
         {
+            DOTween.KillAll();
+            
             Time.timeScale = 1f;
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }

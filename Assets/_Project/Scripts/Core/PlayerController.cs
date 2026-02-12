@@ -46,7 +46,7 @@ namespace _Project.Scripts.Core
         {
             if (Input.GetKeyDown(KeyCode.UpArrow) && _isGrounded) 
                 Jump();
-            if (Input.GetKeyDown(KeyCode.DownArrow) && _isGrounded)
+            if ((Input.GetKeyDown(KeyCode.DownArrow)/* || Input.GetMouseButtonDown(0) */) && _isGrounded)
                 Boost();
 
             if (Input.touchCount == 2)

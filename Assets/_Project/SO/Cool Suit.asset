@@ -15,5 +15,5 @@ MonoBehaviour:
   id: cool_suit
   displayName: "\u041A\u043E\u0441\u0442\u044E\u043C"
   price: 50
-  icon: {fileID: 21300000, guid: 1e7d12f6ae6d0b848b406b1bb0878767, type: 3}
+  icon: {fileID: 21300000, guid: 61512bdd6cc9eb140b71f3a377c81870, type: 3}
   type: 2
