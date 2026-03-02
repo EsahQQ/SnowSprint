@@ -1,7 +1,8 @@
-﻿using Zenject;
+﻿using _Project.Scripts.Core;
 using UnityEngine;
+using Zenject;
 
-namespace _Project.Scripts.Core
+namespace _Project.Scripts.Installers
 {
     public class GameInstaller : MonoInstaller
     {

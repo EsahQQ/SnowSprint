@@ -1,4 +1,5 @@
 ﻿using System;
+using _Project.Scripts.Data;
 
 namespace _Project.Scripts.Core
 {
@@ -10,5 +11,6 @@ namespace _Project.Scripts.Core
         bool IsUpgradeBought(string upgradeId);
         void UnlockUpgrade(string upgradeId);
         event Action<int> OnCoinsChanged; 
+        bool TryBuyUpgrade(ShopItemConfig item);
     }
 }

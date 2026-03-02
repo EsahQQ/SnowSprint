@@ -65,20 +65,19 @@ namespace _Project.Scripts.Core
                 {
                     var swipeVector = centerPos - _touchStartPos;
 
-                    if (swipeVector.magnitude > minSwipeLength)
+                    if (swipeVector.magnitude > minSwipeLength
+                        && Mathf.Abs(swipeVector.y) > Mathf.Abs(swipeVector.x))
                     {
-                        if (Mathf.Abs(swipeVector.y) > Mathf.Abs(swipeVector.x))
+                        if (swipeVector.y > 0)
                         {
-                            if (swipeVector.y > 0)
-                            {
-                                if (_isGrounded) Jump();
-                            }
-                            else
-                            {
-                                if (_isGrounded) Boost();
-                            }
+                            if (_isGrounded) Jump();
+                        }
+                        else
+                        {
+                            if (_isGrounded) Boost();
                         }
                     }
+                    
                     _isSwiping = false;
                 }
             }
@@ -108,13 +107,7 @@ namespace _Project.Scripts.Core
             _rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
 
-        private void Boost()
-        {
-            _rb.AddForce(Vector2.right * boostForce, ForceMode2D.Impulse);
-            
-            // Опционально: Можно добавить эффект "прижимания" к земле
-            // _rb.AddForce(Vector2.down * 5f, ForceMode2D.Impulse); 
-        }
+        private void Boost() => _rb.AddForce(Vector2.right * boostForce, ForceMode2D.Impulse);
 
         private void RotateVisuals()
         {

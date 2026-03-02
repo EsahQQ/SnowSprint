@@ -1,4 +1,4 @@
-﻿namespace _Project.Scripts.Utils
+﻿namespace _Project.Scripts.Core
 {
     public class Enums
     {

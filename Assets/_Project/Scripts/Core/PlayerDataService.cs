@@ -1,4 +1,5 @@
 ﻿using System;
+using _Project.Scripts.Data;
 using UnityEngine;
 
 namespace _Project.Scripts.Core
@@ -45,6 +46,16 @@ namespace _Project.Scripts.Core
             PlayerPrefs.SetInt($"UPGRADE_{upgradeId}", 1);
             PlayerPrefs.Save();
             Debug.Log($"Upgrade {upgradeId} unlocked!");
+        }
+
+        public bool TryBuyUpgrade(ShopItemConfig item)
+        {
+            if (IsUpgradeBought(item.id)) return false;
+
+            if (!TrySpendCoins(item.price)) return false;
+            
+            UnlockUpgrade(item.id);
+            return true;
         }
     }
 }

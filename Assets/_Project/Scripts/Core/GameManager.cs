@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
-using _Project.Scripts.Utils;
 using DG.Tweening;
 using Zenject;
 
@@ -9,7 +8,6 @@ namespace _Project.Scripts.Core
 {
     public class GameManager : MonoBehaviour
     {
-        [Header("Settings")]
         [SerializeField] private int levelReward = 100;
         
         private IPlayerDataService _playerData;

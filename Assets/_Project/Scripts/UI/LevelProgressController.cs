@@ -14,11 +14,13 @@ namespace _Project.Scripts.UI
         private float _startX;
         private float _finishX;
         private float _totalDistance;
+        private int _lastPercent = 0;
 
         private void Start()
         {
             if (finishTrigger == null || playerTransform == null) return;
             
+            _startX = playerTransform.position.x;
             _finishX = finishTrigger.position.x;
             _totalDistance = _finishX - _startX;
         }
@@ -29,8 +31,12 @@ namespace _Project.Scripts.UI
 
             var currentDistance = playerTransform.position.x - _startX;
             var progress = Mathf.Clamp01(currentDistance / _totalDistance);
+            
+            var percent = Mathf.FloorToInt(progress * 100);
+            if (percent == _lastPercent) return;
 
-            progressText.text = $"{Mathf.FloorToInt(progress * 100)}%";
+            progressText.text = $"{percent}%";
+            _lastPercent = percent;
         }
     }
 }

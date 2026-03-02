@@ -36,10 +36,8 @@ namespace _Project.Scripts.UI
 
         private void TryBuy()
         {
-            if (_dataService.TrySpendCoins(_config.price))
+            if (_dataService.TryBuyUpgrade(_config))
             {
-                _dataService.UnlockUpgrade(_config.id);
-
                 transform.DOPunchScale(Vector3.one * 0.1f, 0.2f);
                 RefreshVisuals();
             }
