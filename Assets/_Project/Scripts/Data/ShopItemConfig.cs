@@ -1,4 +1,4 @@
-﻿using _Project.Scripts.Core;
+﻿using _Project.Scripts.Utils;
 using UnityEngine;
 
 namespace _Project.Scripts.Data

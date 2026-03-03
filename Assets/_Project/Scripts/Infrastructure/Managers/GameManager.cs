@@ -1,10 +1,13 @@
-﻿using UnityEngine;
-using UnityEngine.SceneManagement;
-using System;
+﻿using System;
+using _Project.Scripts.Gameplay.Level;
+using _Project.Scripts.Infrastructure.Services;
+using _Project.Scripts.Utils;
 using DG.Tweening;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 using Zenject;
 
-namespace _Project.Scripts.Core
+namespace _Project.Scripts.Infrastructure.Managers
 {
     public class GameManager : MonoBehaviour
     {

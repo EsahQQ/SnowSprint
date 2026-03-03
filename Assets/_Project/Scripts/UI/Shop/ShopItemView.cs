@@ -1,12 +1,11 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using _Project.Scripts.Data;
+using _Project.Scripts.Infrastructure.Services;
+using DG.Tweening;
 using TMPro;
-using Zenject;
-using _Project.Scripts.Core;
-using _Project.Scripts.Data;
-using DG.Tweening; // Анимации
+using UnityEngine;
+using UnityEngine.UI;
 
-namespace _Project.Scripts.UI
+namespace _Project.Scripts.UI.Shop
 {
     public class ShopItemView : MonoBehaviour
     {

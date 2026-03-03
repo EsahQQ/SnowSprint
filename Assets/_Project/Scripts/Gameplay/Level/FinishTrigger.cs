@@ -1,8 +1,8 @@
 ﻿using System;
+using _Project.Scripts.Gameplay.Player;
 using UnityEngine;
-using Zenject;
 
-namespace _Project.Scripts.Core
+namespace _Project.Scripts.Gameplay.Level
 {
     public class FinishTrigger : MonoBehaviour
     {

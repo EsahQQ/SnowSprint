@@ -1,9 +1,7 @@
-﻿using UnityEngine;
-using TMPro;
-using Zenject;
-using _Project.Scripts.Core;
+﻿using TMPro;
+using UnityEngine;
 
-namespace _Project.Scripts.UI
+namespace _Project.Scripts.UI.HUD
 {
     public class LevelProgressController : MonoBehaviour
     {

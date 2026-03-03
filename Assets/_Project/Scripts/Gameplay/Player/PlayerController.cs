@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace _Project.Scripts.Core
+namespace _Project.Scripts.Gameplay.Player
 {
     public class PlayerController : MonoBehaviour
     {

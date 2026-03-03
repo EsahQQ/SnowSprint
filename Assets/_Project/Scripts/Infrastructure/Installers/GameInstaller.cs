@@ -1,8 +1,10 @@
-﻿using _Project.Scripts.Core;
+﻿using _Project.Scripts.Gameplay.Level;
+using _Project.Scripts.Infrastructure.Managers;
+using _Project.Scripts.Infrastructure.Services;
 using UnityEngine;
 using Zenject;
 
-namespace _Project.Scripts.Installers
+namespace _Project.Scripts.Infrastructure.Installers
 {
     public class GameInstaller : MonoInstaller
     {

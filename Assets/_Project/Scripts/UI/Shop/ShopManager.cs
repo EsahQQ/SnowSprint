@@ -1,15 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
-using Zenject;
-using _Project.Scripts.Core;
 using _Project.Scripts.Data;
+using _Project.Scripts.Infrastructure.Managers;
+using _Project.Scripts.Infrastructure.Services;
 using DG.Tweening;
+using TMPro;
+using UnityEngine;
+using Zenject;
 
-namespace _Project.Scripts.UI
+namespace _Project.Scripts.UI.Shop
 {
-    public class UIManager : MonoBehaviour
+    public class ShopManager : MonoBehaviour
     {
         [Header("Screens")]
         [SerializeField] private GameObject hudPanel;
