@@ -1,0 +1,19 @@
+{
+    "name": "Bootstrap",
+    "rootNamespace": "",
+    "references": [
+        "Infrastructure",
+        "UniTask",
+        "Zenject",
+        "Features"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
