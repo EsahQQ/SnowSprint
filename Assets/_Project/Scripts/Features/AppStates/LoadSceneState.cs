@@ -3,7 +3,7 @@ using _Project.Scripts.Infrastructure.StateMachine;
 using _Project.Scripts.Infrastructure.StateMachine.State.Payload;
 using Cysharp.Threading.Tasks;
 
-namespace _Project.Scripts.Features.AppStates.LoadSceneState
+namespace _Project.Scripts.Features.AppStates
 {
     public class LoadSceneState : BasePayloadedState<string>
     {

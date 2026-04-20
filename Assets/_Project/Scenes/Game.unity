@@ -281,14 +281,14 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 21622332}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2102935908}
   - {fileID: 1800437106}
-  m_Father: {fileID: 1497649850}
+  m_Father: {fileID: 2089133613}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
@@ -720,7 +720,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 1497649850}
+  m_Father: {fileID: 2089133613}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
@@ -2881,8 +2881,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 21622333}
-  - {fileID: 388286978}
+  - {fileID: 2089133613}
   - {fileID: 1525397295}
   m_Father: {fileID: 262783848}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2902,6 +2901,7 @@ GameObject:
   - component: {fileID: 1525397295}
   - component: {fileID: 1525397297}
   - component: {fileID: 1525397296}
+  - component: {fileID: 1525397298}
   m_Layer: 5
   m_Name: ShopPanel
   m_TagString: Untagged
@@ -2969,6 +2969,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1525397294}
   m_CullTransparentMesh: 1
+--- !u!114 &1525397298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1525397294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41f55c5853214ad8b147cc87eb4272e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shopPanel: {fileID: 1525397294}
+  coinsText: {fileID: 10338447}
+  shopContainer: {fileID: 1806568601}
+  shopItemPrefab: {fileID: 7136053304382654407, guid: 18db800651e138b42a15a773f51a7285, type: 3}
 --- !u!1 &1534893418
 GameObject:
   m_ObjectHideFlags: 0
@@ -3449,6 +3465,8 @@ GameObject:
   - component: {fileID: 1859992699}
   - component: {fileID: 1859992698}
   - component: {fileID: 1859992697}
+  - component: {fileID: 1859992701}
+  - component: {fileID: 1859992700}
   m_Layer: 0
   m_Name: SceneContext
   m_TagString: Untagged
@@ -3468,11 +3486,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c31ae3c4d60946cda9f053add8727bc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Core.GameInstaller
-  gameManagerPrefab: {fileID: 6936961307209955157, guid: 8103b53a0e94bc54d9235abc08a5adac, type: 3}
   finishTrigger: {fileID: 1062955814}
   shopDatabase: {fileID: 11400000, guid: 442d403359554234a8b1e240a6f7aa99, type: 2}
   localPlayer: {fileID: 686243693}
-  localInput: {fileID: 0}
+  localInput: {fileID: 686243697}
 --- !u!114 &1859992698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3488,6 +3505,8 @@ MonoBehaviour:
   _scriptableObjectInstallers: []
   _monoInstallers:
   - {fileID: 1859992697}
+  - {fileID: 1859992701}
+  - {fileID: 1859992700}
   _installerPrefabs: []
   _autoRun: 1
   OnPreInstall:
@@ -3520,6 +3539,32 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1859992700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1859992696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 643d3cea4f924f92b777f13087b8a95c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hudView: {fileID: 2089133614}
+  shopView: {fileID: 1525397298}
+--- !u!114 &1859992701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1859992696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c14d4632f9a45419ae786a6a1e05c77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1870373341
 GameObject:
   m_ObjectHideFlags: 0
@@ -3637,8 +3682,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2112031033}
-        m_TargetAssemblyTypeName: _Project.Scripts.UI.UIManager, Assembly-CSharp
+      - m_Target: {fileID: 1525397298}
+        m_TargetAssemblyTypeName: _Project.Scripts.Features.UI.ShopView, Features
         m_MethodName: OnNextLevelClick
         m_Mode: 1
         m_Arguments:
@@ -3687,6 +3732,57 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2016279225}
   m_CullTransparentMesh: 1
+--- !u!1 &2089133612
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2089133613}
+  - component: {fileID: 2089133614}
+  m_Layer: 5
+  m_Name: HUD
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2089133613
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2089133612}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 21622333}
+  - {fileID: 388286978}
+  m_Father: {fileID: 1497649850}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2089133614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2089133612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc003e0c41d34859bc23775929519416, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hudPanel: {fileID: 2089133612}
 --- !u!1 &2102935907
 GameObject:
   m_ObjectHideFlags: 0
@@ -3771,7 +3867,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2112031032}
-  - component: {fileID: 2112031033}
   - component: {fileID: 2112031034}
   m_Layer: 5
   m_Name: UIRoot
@@ -3799,24 +3894,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2112031033
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2112031031}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 806ac9afc7bc410cafda4636709fae8b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.UI.UIManager
-  hudPanel: {fileID: 1497649849}
-  shopPanel: {fileID: 1525397294}
-  coinsText: {fileID: 10338447}
-  sliders: {fileID: 21622334}
-  shopContainer: {fileID: 1806568601}
-  shopItemPrefab: {fileID: 7136053304382654407, guid: 18db800651e138b42a15a773f51a7285, type: 3}
 --- !u!114 &2112031034
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -8,11 +8,4 @@
         JumpForce,
         None
     }
-
-    public enum GameState
-    {
-        Intro,
-        Gameplay,
-        Shop
-    }
 }

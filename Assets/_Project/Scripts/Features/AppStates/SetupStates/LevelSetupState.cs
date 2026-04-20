@@ -1,4 +1,5 @@
-﻿using _Project.Scripts.Infrastructure.StateMachine;
+﻿using _Project.Scripts.Features.AppStates.Gameplay;
+using _Project.Scripts.Infrastructure.StateMachine;
 using _Project.Scripts.Infrastructure.StateMachine.State;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -13,12 +14,13 @@ namespace _Project.Scripts.Features.AppStates.SetupStates
         {
             Debug.Log("LevelSetup State...");
             await Setup();
-            StateMachine.RequestSwitchState<GameState>();
+            
+            StateMachine.RequestSwitchState<GameplayLoopState>();
         }
 
         public async UniTask Setup()
         {
-            await UniTask.Delay(1000);
+            await UniTask.Yield(); 
         }
     }
 }
