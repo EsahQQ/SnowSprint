@@ -1,11 +1,11 @@
-﻿using DG.Tweening;
+﻿using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace _Project.Scripts.Features.UI.Menu
+namespace _Project.Scripts.Features.UI
 {
-    public class MainMenuController : MonoBehaviour
+    public class MainMenuView : MonoBehaviour, IMainMenuView
     {
         [Header("Panels")]
         [SerializeField] private CanvasGroup menuGroup;
@@ -19,7 +19,8 @@ namespace _Project.Scripts.Features.UI.Menu
         
         [Header("Settings")]
         [SerializeField] private float fadeDuration = 0.4f;
-        [SerializeField] private string gameSceneName = "Game";
+
+        private UniTaskCompletionSource _playCompletionSource;
 
         private void Start()
         {
@@ -30,6 +31,17 @@ namespace _Project.Scripts.Features.UI.Menu
             backButton.onClick.AddListener(() => SwitchPanels(settingsGroup, menuGroup));
 
             ResetState();
+        }
+
+        public async UniTask ProcessMenuAsync()
+        {
+            _playCompletionSource = new UniTaskCompletionSource();
+            await _playCompletionSource.Task;
+        }
+        
+        private void PlayGame()
+        {
+            _playCompletionSource?.TrySetResult();
         }
 
         private void ResetState()
@@ -61,11 +73,6 @@ namespace _Project.Scripts.Features.UI.Menu
 
                 from.interactable = false;
             });
-        }
-
-        private void PlayGame()
-        {
-            SceneManager.LoadScene(gameSceneName);
         }
 
         private void QuitGame()

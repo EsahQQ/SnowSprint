@@ -527,7 +527,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1497649850}
-  - {fileID: 2112031032}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -701,6 +700,7 @@ GameObject:
   - component: {fileID: 388286978}
   - component: {fileID: 388286980}
   - component: {fileID: 388286979}
+  - component: {fileID: 388286981}
   m_Layer: 5
   m_Name: Progress
   m_TagString: Untagged
@@ -827,6 +827,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 388286977}
   m_CullTransparentMesh: 1
+--- !u!114 &388286981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 388286977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 335629b20f314b4584edb5200e9d61da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  progressText: {fileID: 388286979}
 --- !u!1 &403080890
 GameObject:
   m_ObjectHideFlags: 0
@@ -2632,6 +2645,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1497649850}
+  - component: {fileID: 1497649852}
+  - component: {fileID: 1497649851}
   m_Layer: 5
   m_Name: HUD
   m_TagString: Untagged
@@ -2660,6 +2675,36 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1497649851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1497649849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41f55c5853214ad8b147cc87eb4272e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shopPanel: {fileID: 1525397294}
+  coinsText: {fileID: 10338447}
+  shopContainer: {fileID: 1806568601}
+  shopItemPrefab: {fileID: 7136053304382654407, guid: 18db800651e138b42a15a773f51a7285, type: 3}
+  readyButton: {fileID: 2016279227}
+--- !u!114 &1497649852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1497649849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc003e0c41d34859bc23775929519416, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hudPanel: {fileID: 2089133612}
 --- !u!1 &1525397294
 GameObject:
   m_ObjectHideFlags: 0
@@ -2671,7 +2716,6 @@ GameObject:
   - component: {fileID: 1525397295}
   - component: {fileID: 1525397297}
   - component: {fileID: 1525397296}
-  - component: {fileID: 1525397298}
   m_Layer: 5
   m_Name: ShopPanel
   m_TagString: Untagged
@@ -2739,22 +2783,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1525397294}
   m_CullTransparentMesh: 1
---- !u!114 &1525397298
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1525397294}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 41f55c5853214ad8b147cc87eb4272e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shopPanel: {fileID: 1525397294}
-  coinsText: {fileID: 10338447}
-  shopContainer: {fileID: 1806568601}
-  shopItemPrefab: {fileID: 7136053304382654407, guid: 18db800651e138b42a15a773f51a7285, type: 3}
 --- !u!1 &1534893418
 GameObject:
   m_ObjectHideFlags: 0
@@ -3258,8 +3286,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Core.GameInstaller
   finishTrigger: {fileID: 1062955814}
   shopDatabase: {fileID: 11400000, guid: 442d403359554234a8b1e240a6f7aa99, type: 2}
-  localPlayer: {fileID: 0}
-  localInput: {fileID: 0}
 --- !u!114 &1859992698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3321,10 +3347,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 643d3cea4f924f92b777f13087b8a95c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hudView: {fileID: 2089133614}
-  shopView: {fileID: 1525397298}
-  playerPrefab: {fileID: 0}
-  spawnPoint: {fileID: 0}
+  hudView: {fileID: 1497649852}
+  shopView: {fileID: 1497649851}
+  playerPrefab: {fileID: 7147003220609383991, guid: e85435132e65c584cb4bbb40becdd7d0, type: 3}
+  spawnPoint: {fileID: 727290996}
 --- !u!114 &1859992701
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3454,7 +3480,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1525397298}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: _Project.Scripts.Features.UI.ShopView, Features
         m_MethodName: OnNextLevelClick
         m_Mode: 1
@@ -3513,14 +3539,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2089133613}
-  - component: {fileID: 2089133614}
   m_Layer: 5
   m_Name: HUD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2089133613
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3542,19 +3567,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2089133614
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2089133612}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc003e0c41d34859bc23775929519416, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hudPanel: {fileID: 2089133612}
 --- !u!1 &2102935907
 GameObject:
   m_ObjectHideFlags: 0
@@ -3630,57 +3642,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2102935907}
   m_CullTransparentMesh: 1
---- !u!1 &2112031031
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2112031032}
-  - component: {fileID: 2112031034}
-  m_Layer: 5
-  m_Name: UIRoot
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &2112031032
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2112031031}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 262783848}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2112031034
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2112031031}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 335629b20f314b4584edb5200e9d61da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.UI.LevelProgressController
-  progressText: {fileID: 388286979}
-  finishTrigger: {fileID: 1062955813}
-  playerTransform: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -1,4 +1,6 @@
-﻿using _Project.Scripts.Infrastructure.StateMachine;
+﻿using _Project.Scripts.Features.SceneConstants;
+using _Project.Scripts.Features.UI;
+using _Project.Scripts.Infrastructure.StateMachine;
 using _Project.Scripts.Infrastructure.StateMachine.State;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -7,12 +9,20 @@ namespace _Project.Scripts.Features.AppStates
 {
     public class MainMenuState : BaseState
     {
-        public MainMenuState(IStateMachine stateMachine) : base(stateMachine) { }
+        private readonly IMainMenuView _mainMenuView;
+
+        public MainMenuState(IStateMachine stateMachine, IMainMenuView mainMenuView) : base(stateMachine)
+        {
+            _mainMenuView = mainMenuView;
+        }
         
-        public override UniTask OnEnter()
+        public override async UniTask OnEnter()
         {
             Debug.Log("MainMenuState Enter");
-            return base.OnEnter();
+            
+            await _mainMenuView.ProcessMenuAsync();
+            
+            StateMachine.RequestSwitchState<LoadSceneState, string>(SceneNames.Game);
         }
     }
 }

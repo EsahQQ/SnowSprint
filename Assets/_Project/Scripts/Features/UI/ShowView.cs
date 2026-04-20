@@ -7,6 +7,7 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using Zenject;
 
 namespace _Project.Scripts.Features.UI
@@ -18,7 +19,8 @@ namespace _Project.Scripts.Features.UI
         [SerializeField] private TextMeshProUGUI coinsText;
         [SerializeField] private Transform shopContainer; 
         [SerializeField] private ShopItemView shopItemPrefab;
-
+        [SerializeField] private Button readyButton;
+        
         private IPlayerDataService _playerData;
         private ShopDatabase _shopDatabase; 
         private List<ShopItemView> _spawnedItems = new List<ShopItemView>();
@@ -35,6 +37,7 @@ namespace _Project.Scripts.Features.UI
         private void Start()
         {
             shopPanel.SetActive(false);
+            readyButton.onClick.AddListener(OnNextLevelClick);
             GenerateShop();
         }
 
@@ -55,7 +58,7 @@ namespace _Project.Scripts.Features.UI
             shopPanel.SetActive(false);
         }
 
-        public void OnNextLevelClick()
+        private void OnNextLevelClick()
         {
             _shopCompletionSource?.TrySetResult();
         }
