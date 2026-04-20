@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using _Project.Scripts.Features.Data;
+using _Project.Scripts.Features.Player.Services;
 using _Project.Scripts.Features.Services;
 using _Project.Scripts.Features.UI.Shop;
 using Cysharp.Threading.Tasks;
@@ -40,9 +41,9 @@ namespace _Project.Scripts.Features.UI
         public async UniTask ProcessShopAsync()
         {
             _playerData.OnCoinsChanged += UpdateCoinsUI;
-            UpdateCoinsUI(_playerData.Coins);
-
+            
             shopPanel.SetActive(true);
+            UpdateCoinsUI(_playerData.Coins);
             shopPanel.transform.localPosition = new Vector3(0, 1000, 0);
             shopPanel.transform.DOLocalMoveY(0, 0.5f).SetEase(Ease.OutBack).SetUpdate(true);
 

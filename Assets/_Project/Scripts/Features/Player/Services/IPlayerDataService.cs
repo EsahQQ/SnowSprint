@@ -1,7 +1,7 @@
 ﻿using System;
 using _Project.Scripts.Features.Data;
 
-namespace _Project.Scripts.Features.Services
+namespace _Project.Scripts.Features.Player.Services
 {
     public interface IPlayerDataService
     {

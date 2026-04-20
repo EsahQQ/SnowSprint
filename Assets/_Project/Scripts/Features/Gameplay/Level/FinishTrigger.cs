@@ -1,5 +1,5 @@
 ﻿using System;
-using _Project.Scripts.Features.Gameplay.Player;
+using _Project.Scripts.Features.Player;
 using UnityEngine;
 
 namespace _Project.Scripts.Features.Gameplay.Level

@@ -1,8 +1,8 @@
-using _Project.Scripts.Features.Gameplay.Player.PlayerInput;
+using _Project.Scripts.Features.Player.PlayerInput;
 using UnityEngine;
 using Zenject;
 
-namespace _Project.Scripts.Features.Gameplay.Player
+namespace _Project.Scripts.Features.Player
 {
     public class PlayerController : MonoBehaviour
     {
@@ -10,15 +10,10 @@ namespace _Project.Scripts.Features.Gameplay.Player
         private PlayerPhysics _physics;
         private bool _isActive = true; 
 
-        [Inject]
-        public void Construct(IPlayerInput input)
-        {
-            _input = input;
-        }
-
         private void Awake()
         {
             _physics = GetComponent<PlayerPhysics>();
+            _input = GetComponent<IPlayerInput>();
         }
 
         private void Update()

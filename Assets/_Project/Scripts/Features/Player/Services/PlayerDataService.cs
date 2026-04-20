@@ -2,7 +2,7 @@
 using _Project.Scripts.Features.Data;
 using UnityEngine;
 
-namespace _Project.Scripts.Features.Services
+namespace _Project.Scripts.Features.Player.Services
 {
     public class PlayerDataService : IPlayerDataService
     {

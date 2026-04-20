@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace _Project.Scripts.Features.Gameplay.Player.PlayerInput
+namespace _Project.Scripts.Features.Player.PlayerInput
 {
     public class LocalPlayerInput : MonoBehaviour, IPlayerInput
     {

@@ -1,10 +1,11 @@
 ﻿using _Project.Scripts.Features.Data;
+using _Project.Scripts.Features.Player.Services;
 using _Project.Scripts.Features.Services;
 using _Project.Scripts.Features.Utils;
 using UnityEngine;
 using Zenject;
 
-namespace _Project.Scripts.Features.Gameplay.Player
+namespace _Project.Scripts.Features.Player
 {
     public class PlayerStatsHandler : MonoBehaviour
     {

@@ -1,4 +1,4 @@
-﻿namespace _Project.Scripts.Features.Gameplay.Player.PlayerInput
+﻿namespace _Project.Scripts.Features.Player.PlayerInput
 {
     public interface IPlayerInput
     {

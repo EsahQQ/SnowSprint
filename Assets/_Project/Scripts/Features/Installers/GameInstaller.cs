@@ -1,8 +1,6 @@
 ﻿using _Project.Scripts.Features.Data;
 using _Project.Scripts.Features.Gameplay.Level;
-using _Project.Scripts.Features.Gameplay.Player;
-using _Project.Scripts.Features.Gameplay.Player.PlayerInput;
-using _Project.Scripts.Features.Services;
+using _Project.Scripts.Features.Player.Services;
 using UnityEngine;
 using Zenject;
 
@@ -12,18 +10,12 @@ namespace _Project.Scripts.Features.Installers
     {
         [SerializeField] private FinishTrigger finishTrigger;
         [SerializeField] private ShopDatabase shopDatabase;
-        
-        [Header("Player Refs (Для синглплеера/прототипа)")]
-        [SerializeField] private PlayerController localPlayer;
-        [SerializeField] private LocalPlayerInput localInput;
 
         public override void InstallBindings()
         {
             Container.Bind<IPlayerDataService>().To<PlayerDataService>().AsSingle();
             Container.Bind<ShopDatabase>().FromInstance(shopDatabase).AsSingle();
             Container.Bind<FinishTrigger>().FromComponentInHierarchy(finishTrigger).AsSingle();
-            Container.Bind<IPlayerInput>().FromInstance(localInput).AsSingle();
-            Container.Bind<PlayerController>().FromInstance(localPlayer).AsSingle();
         }
     }
 }

@@ -1,5 +1,6 @@
 using _Project.Scripts.Features.Gameplay.Level;
-using _Project.Scripts.Features.Gameplay.Player;
+using _Project.Scripts.Features.Player;
+using _Project.Scripts.Features.Player.Provider;
 using _Project.Scripts.Features.UI;
 using _Project.Scripts.Infrastructure.StateMachine;
 using _Project.Scripts.Infrastructure.StateMachine.State;
@@ -10,14 +11,13 @@ namespace _Project.Scripts.Features.AppStates.Gameplay
 {
     public class GameplayLoopState : BaseState
     {
-        private readonly PlayerController _player;
+        private readonly IPlayerProvider _playerProvider;
         private readonly FinishTrigger _finishTrigger;
         private readonly IHudView _hudView;
 
-        public GameplayLoopState(IStateMachine stateMachine, PlayerController player, FinishTrigger finishTrigger, IHudView hudView) 
-            : base(stateMachine)
+        public GameplayLoopState(IStateMachine stateMachine, IPlayerProvider playerProvider, FinishTrigger finishTrigger, IHudView hudView) : base(stateMachine)
         {
-            _player = player;
+            _playerProvider = playerProvider;
             _finishTrigger = finishTrigger;
             _hudView = hudView;
         }
@@ -27,7 +27,7 @@ namespace _Project.Scripts.Features.AppStates.Gameplay
             Debug.Log("GameplayLoopState Enter");
             
             _hudView.Show();
-            _player.SetActive(true);
+            _playerProvider.Player.SetActive(true);
             _finishTrigger.OnPlayerFinished += OnLevelFinished;
             
             return UniTask.CompletedTask;
@@ -36,16 +36,12 @@ namespace _Project.Scripts.Features.AppStates.Gameplay
         public override UniTask OnExit()
         {
             _finishTrigger.OnPlayerFinished -= OnLevelFinished;
-            
+            _playerProvider.Player.SetActive(false);
             _hudView.Hide();
-            _player.SetActive(false);
             
             return UniTask.CompletedTask;
         }
 
-        private void OnLevelFinished()
-        {
-            StateMachine.RequestSwitchState<LevelFinishedState>();
-        }
+        private void OnLevelFinished() => StateMachine.RequestSwitchState<LevelFinishedState>();
     }
 }

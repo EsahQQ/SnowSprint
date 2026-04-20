@@ -1,6 +1,9 @@
 ﻿using _Project.Scripts.Bootstrap.EntryPoint;
 using _Project.Scripts.Bootstrap.InitPipeline.Initializers.Scene;
 using _Project.Scripts.Features.AppStates.SetupStates;
+using _Project.Scripts.Features.Player;
+using _Project.Scripts.Features.Player.Factories;
+using _Project.Scripts.Features.Player.Provider;
 using _Project.Scripts.Features.UI;
 using UnityEngine;
 using Zenject;
@@ -13,6 +16,10 @@ namespace _Project.Scripts.Bootstrap.Installers.Scenes
         [SerializeField] private HudView hudView;
         [SerializeField] private ShopView shopView;
         
+        [Header("Player Settings")]
+        [SerializeField] private PlayerController playerPrefab;
+        [SerializeField] private Transform spawnPoint;
+        
         public override void InstallBindings()
         {
             Container.Bind<ISceneInitializer>().To<NullSceneInitializer>().AsSingle();
@@ -20,6 +27,13 @@ namespace _Project.Scripts.Bootstrap.Installers.Scenes
             
             Container.Bind<IHudView>().FromInstance(hudView).AsSingle();
             Container.Bind<IShopView>().FromInstance(shopView).AsSingle();
+            
+            Container.Bind<IPlayerProvider>().To<PlayerProvider>().AsSingle();
+            
+            Container.Bind<PlayerController>().FromInstance(playerPrefab).WhenInjectedInto<PlayerFactory>();
+            Container.Bind<PlayerFactory>().AsSingle();
+            
+            Container.Bind<Transform>().FromInstance(spawnPoint).WhenInjectedInto<LevelSetupState>();
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace _Project.Scripts.Features.Gameplay.Player
+namespace _Project.Scripts.Features.Player
 {
     public class PlayerVisuals : MonoBehaviour
     {

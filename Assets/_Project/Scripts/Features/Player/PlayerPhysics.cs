@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace _Project.Scripts.Features.Gameplay.Player
+namespace _Project.Scripts.Features.Player
 {
     [RequireComponent(typeof(Rigidbody2D))]
     public class PlayerPhysics : MonoBehaviour
