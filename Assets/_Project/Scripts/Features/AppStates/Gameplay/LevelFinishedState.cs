@@ -1,12 +1,10 @@
 using _Project.Scripts.Features.Player.Services;
 using _Project.Scripts.Features.SceneConstants;
-using _Project.Scripts.Features.Services;
 using _Project.Scripts.Features.UI;
 using _Project.Scripts.Infrastructure.StateMachine;
 using _Project.Scripts.Infrastructure.StateMachine.State;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace _Project.Scripts.Features.AppStates.Gameplay
 {

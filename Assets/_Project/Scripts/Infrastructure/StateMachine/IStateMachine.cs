@@ -10,5 +10,6 @@ namespace _Project.Scripts.Infrastructure.StateMachine
         void RequestSwitchState(Type t);
         void RequestSwitchState<TState, TPayload>(TPayload payload) where TState : IPayloadedState<TPayload>;
         void Update(float deltaTime);
+        void FixedUpdate(float fixedDeltaTime);
     }
 }

@@ -2,31 +2,26 @@
 
 namespace _Project.Scripts.Features.Player.PlayerInput
 {
-    public class LocalPlayerInput : MonoBehaviour, IPlayerInput
+    public class LocalPlayerInput : AbstractPlayerInput
     {
         [SerializeField] private float minSwipeLength = 100f;
         
         private Vector2 _touchStartPos;
         private bool _isSwiping;
-        private bool _jumpTriggered;
-        private bool _boostTriggered;
-
-        private void Update()
+        
+        public override void Tick()
         {
-            _jumpTriggered = false;
-            _boostTriggered = false;
+            JumpTriggered = false;
+            BoostTriggered = false;
 
             HandlePCInput();
             HandleTouchInput();
         }
 
-        public bool GetJumpInput() => _jumpTriggered;
-        public bool GetBoostInput() => _boostTriggered;
-
         private void HandlePCInput()
         {
-            if (Input.GetKeyDown(KeyCode.UpArrow)) _jumpTriggered = true;
-            if (Input.GetKeyDown(KeyCode.DownArrow)) _boostTriggered = true;
+            if (Input.GetKeyDown(KeyCode.UpArrow)) JumpTriggered = true;
+            if (Input.GetKeyDown(KeyCode.DownArrow)) BoostTriggered = true;
         }
 
         private void HandleTouchInput()
@@ -46,11 +41,10 @@ namespace _Project.Scripts.Features.Player.PlayerInput
                 {
                     var swipeVector = centerPos - _touchStartPos;
 
-                    if (swipeVector.magnitude > minSwipeLength 
-                        && Mathf.Abs(swipeVector.y) > Mathf.Abs(swipeVector.x))
+                    if (swipeVector.magnitude > minSwipeLength && Mathf.Abs(swipeVector.y) > Mathf.Abs(swipeVector.x))
                     {
-                        if (swipeVector.y > 0) _jumpTriggered = true;
-                        else _boostTriggered = true;
+                        if (swipeVector.y > 0) JumpTriggered = true;
+                        else BoostTriggered = true;
                     }
                     _isSwiping = false;
                 }

@@ -2,9 +2,11 @@
 using _Project.Scripts.Bootstrap.InitPipeline.Initializers.Scene;
 using _Project.Scripts.Features.AppStates.SetupStates;
 using _Project.Scripts.Features.Player;
-using _Project.Scripts.Features.Player.Factories;
 using _Project.Scripts.Features.Player.Provider;
 using _Project.Scripts.Features.UI;
+using _Project.Scripts.Features.UI.Shop;
+using _Project.Scripts.Libs.Factories;
+using log4net.Core;
 using UnityEngine;
 using Zenject;
 
@@ -29,11 +31,10 @@ namespace _Project.Scripts.Bootstrap.Installers.Scenes
             Container.Bind<IShopView>().FromInstance(shopView).AsSingle();
             
             Container.Bind<IPlayerProvider>().To<PlayerProvider>().AsSingle();
+            Container.Bind<PlayerController>().FromInstance(playerPrefab).AsSingle();
+            Container.Bind<Transform>().FromInstance(spawnPoint).AsSingle().WhenInjectedInto<LevelSetupState>();
             
-            Container.Bind<PlayerController>().FromInstance(playerPrefab).WhenInjectedInto<PlayerFactory>();
-            Container.Bind<PlayerFactory>().AsSingle();
-            
-            Container.Bind<Transform>().FromInstance(spawnPoint).WhenInjectedInto<LevelSetupState>();
+            Container.Bind<Libs.Factories.IFactory<PlayerController>>().To<ZenjectPrefabFactory<PlayerController>>().AsSingle();
         }
     }
 }

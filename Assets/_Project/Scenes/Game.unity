@@ -3286,6 +3286,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Core.GameInstaller
   finishTrigger: {fileID: 1062955814}
   shopDatabase: {fileID: 11400000, guid: 442d403359554234a8b1e240a6f7aa99, type: 2}
+  playerSettings: {fileID: 11400000, guid: d4d91ecf79a7fa442a28297880e22cc8, type: 2}
 --- !u!114 &1859992698
 MonoBehaviour:
   m_ObjectHideFlags: 0

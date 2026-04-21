@@ -1,14 +1,14 @@
 {
-    "name": "Bootstrap",
+    "name": "Editor",
     "rootNamespace": "",
     "references": [
-        "Infrastructure",
-        "UniTask",
-        "Zenject",
+        "Bootstrap",
         "Features",
-        "Libs"
+        "Infrastructure"
     ],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

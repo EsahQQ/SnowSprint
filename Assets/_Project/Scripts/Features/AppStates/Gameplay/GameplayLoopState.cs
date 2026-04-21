@@ -1,5 +1,4 @@
 using _Project.Scripts.Features.Gameplay.Level;
-using _Project.Scripts.Features.Player;
 using _Project.Scripts.Features.Player.Provider;
 using _Project.Scripts.Features.UI;
 using _Project.Scripts.Infrastructure.StateMachine;
@@ -9,7 +8,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.Features.AppStates.Gameplay
 {
-    public class GameplayLoopState : BaseState
+    public class GameplayLoopState : BaseFixedUpdateableState
     {
         private readonly IPlayerProvider _playerProvider;
         private readonly FinishTrigger _finishTrigger;
@@ -27,6 +26,7 @@ namespace _Project.Scripts.Features.AppStates.Gameplay
             Debug.Log("GameplayLoopState Enter");
             
             _hudView.Show();
+            _playerProvider.Player.Initialize();
             _playerProvider.Player.SetActive(true);
             _finishTrigger.OnPlayerFinished += OnLevelFinished;
             
@@ -43,5 +43,15 @@ namespace _Project.Scripts.Features.AppStates.Gameplay
         }
 
         private void OnLevelFinished() => StateMachine.RequestSwitchState<LevelFinishedState>();
+
+        public override void Update(float dt)
+        {
+            _playerProvider.Player.Tick();
+        }
+
+        public override void FixedUpdate(float fixedDt)
+        {
+            _playerProvider.Player.FixedTick(fixedDt);
+        }
     }
 }

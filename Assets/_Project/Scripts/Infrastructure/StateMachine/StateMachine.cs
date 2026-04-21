@@ -58,6 +58,14 @@ namespace _Project.Scripts.Infrastructure.StateMachine
             _pendingRequest = null;
             TransitionToAsync(request).Forget();
         }
+        
+        public void FixedUpdate(float fixedDt)
+        {
+            if (_isTransitioning) return;
+            
+            if (_currentState is IFixedUpdateableState fixedUpdateable)
+                fixedUpdateable.FixedUpdate(fixedDt);
+        }
 
         private async UniTaskVoid TransitionToAsync(RequestSwitchState request)
         {

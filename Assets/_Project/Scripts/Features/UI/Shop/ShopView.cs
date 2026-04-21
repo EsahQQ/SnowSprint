@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using _Project.Scripts.Features.Data;
 using _Project.Scripts.Features.Player.Services;
-using _Project.Scripts.Features.Services;
-using _Project.Scripts.Features.UI.Shop;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using TMPro;
@@ -10,7 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace _Project.Scripts.Features.UI
+namespace _Project.Scripts.Features.UI.Shop
 {
     public class ShopView : MonoBehaviour, IShopView
     {

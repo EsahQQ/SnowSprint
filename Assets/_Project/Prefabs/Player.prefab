@@ -202,6 +202,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96ce344959c6cd04daf657bf77a04ff9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  _input: {fileID: 2974210310714800656}
+  _physics: {fileID: 2166774247028371530}
+  _stats: {fileID: 1129771053046552589}
+  _visuals: {fileID: 7437368269512421061}
 --- !u!114 &2166774247028371530
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,6 +222,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 16
   rayLength: 1.5
+  _stats: {fileID: 1129771053046552589}
+  _rb: {fileID: 874085991425652111}
 --- !u!114 &1129771053046552589
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -248,6 +254,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Player.PlayerVisuals
   visualSprite: {fileID: 6954292748535664466}
   rotationSpeed: 10
+  _physics: {fileID: 2166774247028371530}
 --- !u!114 &2974210310714800656
 MonoBehaviour:
   m_ObjectHideFlags: 0

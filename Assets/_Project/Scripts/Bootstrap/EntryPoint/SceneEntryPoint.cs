@@ -5,23 +5,14 @@ using Zenject;
 
 namespace _Project.Scripts.Bootstrap.EntryPoint
 {
-    public class SceneEntryPoint<TStartState> : IInitializable, ITickable where TStartState : BaseState
+    public class SceneEntryPoint<TStartState> : IInitializable, ITickable, IFixedTickable where TStartState : BaseState
     {
         private readonly IStateMachine _stateMachine;
-
-        private SceneEntryPoint(IStateMachine stateMachine)
-        {
-            _stateMachine = stateMachine;
-        }
         
-        public void Initialize()
-        {
-            _stateMachine.RequestSwitchState<BootstrapState<TStartState>>();
-        }
-
-        public void Tick()
-        {
-            _stateMachine.Update(Time.deltaTime);
-        }
+        private SceneEntryPoint(IStateMachine stateMachine) => _stateMachine = stateMachine;
+        
+        public void Initialize() => _stateMachine.RequestSwitchState<BootstrapState<TStartState>>();
+        public void Tick() => _stateMachine.Update(Time.deltaTime);
+        public void FixedTick() => _stateMachine.FixedUpdate(Time.fixedDeltaTime);
     }
 }

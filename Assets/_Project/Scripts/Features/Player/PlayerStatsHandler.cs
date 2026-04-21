@@ -1,6 +1,6 @@
 ﻿using _Project.Scripts.Features.Data;
 using _Project.Scripts.Features.Player.Services;
-using _Project.Scripts.Features.Services;
+using _Project.Scripts.Features.Player.Settings;
 using _Project.Scripts.Features.Utils;
 using UnityEngine;
 using Zenject;
@@ -9,11 +9,7 @@ namespace _Project.Scripts.Features.Player
 {
     public class PlayerStatsHandler : MonoBehaviour
     {
-        [Header("Base Settings")]
-        [SerializeField] private float baseMaxSpeed = 10f;
-        [SerializeField] private float baseAcceleration = 2f;
-        [SerializeField] private float baseBoostForce = 2f;
-        [SerializeField] private float baseJumpForce = 5f;
+        [Inject] private PlayerSettings _playerSettings;
 
         public float CurrentMaxSpeed { get; private set; }
         public float CurrentAcceleration { get; private set; }
@@ -30,17 +26,17 @@ namespace _Project.Scripts.Features.Player
             _shopDatabase = shopDatabase;
         }
 
-        private void Start()
+        public void Initialize()
         {
             RecalculateStats();
         }
 
         private void RecalculateStats()
         {
-            CurrentMaxSpeed = baseMaxSpeed;
-            CurrentAcceleration = baseAcceleration;
-            CurrentBoostForce = baseBoostForce;
-            CurrentJumpForce = baseJumpForce;
+            CurrentMaxSpeed = _playerSettings.BaseMaxSpeed;
+            CurrentAcceleration = _playerSettings.BaseAcceleration;
+            CurrentBoostForce = _playerSettings.BaseBoostForce;
+            CurrentJumpForce = _playerSettings.BaseJumpForce;
 
             foreach (var item in _shopDatabase.allItems)
                 if (_playerData.IsUpgradeBought(item.id))
