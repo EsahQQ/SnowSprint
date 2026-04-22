@@ -25,15 +25,19 @@ namespace _Project.Scripts.Features.Network
         public async UniTask QuickJoinOrCreateAsync()
         {
             await InitializeUnityServicesAsync();
-            if (!await TryQuickJoinLobbyAsync()) await CreateLobbyAndRelayAsync();
+            if (!await TryQuickJoinLobbyAsync()) 
+                await CreateLobbyAndRelayAsync();
         }
 
         private async UniTask InitializeUnityServicesAsync()
         {
             if (_isInitialized) return;
+            
             await UnityServices.InitializeAsync();
+            
             if (!AuthenticationService.Instance.IsSignedIn)
                 await AuthenticationService.Instance.SignInAnonymouslyAsync();
+            
             _isInitialized = true;
         }
 
@@ -43,11 +47,16 @@ namespace _Project.Scripts.Features.Network
             {
                 var lobby = await LobbyService.Instance.QuickJoinLobbyAsync();
                 var joinAllocation = await RelayService.Instance.JoinAllocationAsync(lobby.Data[RelayCodeKey].Value);
-                NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new Unity.Networking.Transport.Relay.RelayServerData(joinAllocation, "dtls"));
+                NetworkManager.Singleton
+                    .GetComponent<UnityTransport>()
+                    .SetRelayServerData(new Unity.Networking.Transport.Relay.RelayServerData(joinAllocation, "dtls"));
                 StartClient();
                 return true;
             }
-            catch (LobbyServiceException) { return false; }
+            catch (LobbyServiceException)
+            {
+                return false;
+            }
         }
 
         private async UniTask CreateLobbyAndRelayAsync()
@@ -55,23 +64,27 @@ namespace _Project.Scripts.Features.Network
             try
             {
                 var allocation = await RelayService.Instance.CreateAllocationAsync(MaxPlayers - 1);
-                string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
-                
+                var joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+
                 await LobbyService.Instance.CreateLobbyAsync("SkiRaceLobby", MaxPlayers, new CreateLobbyOptions
                 {
                     IsPrivate = false,
-                    Data = new Dictionary<string, DataObject> { { RelayCodeKey, new DataObject(DataObject.VisibilityOptions.Public, joinCode) } }
+                    Data = new Dictionary<string, DataObject>
+                        { { RelayCodeKey, new DataObject(DataObject.VisibilityOptions.Public, joinCode) } }
                 });
 
-                NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new Unity.Networking.Transport.Relay.RelayServerData(allocation, "dtls"));
+                NetworkManager.Singleton.GetComponent<UnityTransport>()
+                    .SetRelayServerData(new Unity.Networking.Transport.Relay.RelayServerData(allocation, "dtls"));
                 StartHost();
             }
-            catch (Exception e) { Debug.LogError($"[Network] Ошибка: {e.Message}"); }
+            catch (Exception e)
+            {
+                Debug.LogError($"[Network] Ошибка: {e.Message}");
+            }
         }
 
         public void StartHost() => NetworkManager.Singleton.StartHost();
         public void StartClient() => NetworkManager.Singleton.StartClient();
-        
         public void SetLocalPlayerReady(bool isReady) { } 
     }
 }

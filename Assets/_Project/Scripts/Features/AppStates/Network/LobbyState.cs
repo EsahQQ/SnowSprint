@@ -23,20 +23,12 @@ namespace _Project.Scripts.Features.AppStates.Network
 
         public override async UniTask OnEnter()
         {
-            Debug.Log("LobbyState Enter");
-            
             _lobbyNetworkManager.OnAllPlayersReady += StartGame;
             
             await _lobbyView.ProcessLobbyAsync();
             
             if (_lobbyNetworkManager.IsSpawned)
-            {
                 _lobbyNetworkManager.SetPlayerReadyServerRpc(true);
-            }
-            else
-            {
-                Debug.LogError("[Network] Ошибка: Лобби Менеджер еще не заспавнен сетью!");
-            }
         }
 
         public override UniTask OnExit()
@@ -47,7 +39,6 @@ namespace _Project.Scripts.Features.AppStates.Network
 
         private void StartGame()
         {
-            // Хост грузит сцену игры
             if (NetworkManager.Singleton.IsServer)
                 StateMachine.RequestSwitchState<LoadSceneState, string>(SceneNames.Game);
         }

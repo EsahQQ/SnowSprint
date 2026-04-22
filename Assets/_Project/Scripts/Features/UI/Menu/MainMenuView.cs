@@ -8,27 +8,26 @@ namespace _Project.Scripts.Features.UI
     public class MainMenuView : MonoBehaviour, IMainMenuView
     {
         [Header("Panels")]
-        [SerializeField] private CanvasGroup menuGroup;
-        [SerializeField] private CanvasGroup settingsGroup;
+        [SerializeField] private CanvasGroup _menuGroup;
+        [SerializeField] private CanvasGroup _settingsGroup;
 
         [Header("Buttons")]
-        [SerializeField] private Button playButton;
-        [SerializeField] private Button settingsButton;
-        [SerializeField] private Button exitButton;
-        [SerializeField] private Button backButton; 
+        [SerializeField] private Button _playButton;
+        [SerializeField] private Button _settingsButton;
+        [SerializeField] private Button _exitButton;
+        [SerializeField] private Button _backButton; 
         
         [Header("Settings")]
-        [SerializeField] private float fadeDuration = 0.4f;
+        [SerializeField] private float _fadeDuration = 0.4f;
 
         private UniTaskCompletionSource _playCompletionSource;
 
         private void Start()
         {
-            playButton.onClick.AddListener(PlayGame);
-            exitButton.onClick.AddListener(QuitGame);
-        
-            settingsButton.onClick.AddListener(() => SwitchPanels(menuGroup, settingsGroup));
-            backButton.onClick.AddListener(() => SwitchPanels(settingsGroup, menuGroup));
+            _playButton.onClick.AddListener(PlayGame);
+            _exitButton.onClick.AddListener(QuitGame);
+            _settingsButton.onClick.AddListener(() => SwitchPanels(_menuGroup, _settingsGroup));
+            _backButton.onClick.AddListener(() => SwitchPanels(_settingsGroup, _menuGroup));
 
             ResetState();
         }
@@ -39,20 +38,17 @@ namespace _Project.Scripts.Features.UI
             await _playCompletionSource.Task;
         }
         
-        private void PlayGame()
-        {
-            _playCompletionSource?.TrySetResult();
-        }
+        private void PlayGame() => _playCompletionSource?.TrySetResult();
 
         private void ResetState()
         {
-            menuGroup.alpha = 1;
-            menuGroup.blocksRaycasts = true;
-            menuGroup.interactable = true;
+            _menuGroup.alpha = 1;
+            _menuGroup.blocksRaycasts = true;
+            _menuGroup.interactable = true;
 
-            settingsGroup.alpha = 0;
-            settingsGroup.blocksRaycasts = false;
-            settingsGroup.interactable = false;
+            _settingsGroup.alpha = 0;
+            _settingsGroup.blocksRaycasts = false;
+            _settingsGroup.interactable = false;
         }
 
         private void SwitchPanels(CanvasGroup from, CanvasGroup to)
@@ -60,17 +56,14 @@ namespace _Project.Scripts.Features.UI
             from.blocksRaycasts = false;
             to.blocksRaycasts = false;
 
-            Sequence seq = DOTween.Sequence();
+            var seq = DOTween.Sequence();
 
-            seq.Append(from.DOFade(0, fadeDuration));
-
-            seq.Append(to.DOFade(1, fadeDuration));
-
+            seq.Append(from.DOFade(0, _fadeDuration));
+            seq.Append(to.DOFade(1, _fadeDuration));
             seq.OnComplete(() => 
             {
                 to.blocksRaycasts = true;
                 to.interactable = true;
-
                 from.interactable = false;
             });
         }
@@ -78,9 +71,9 @@ namespace _Project.Scripts.Features.UI
         private void QuitGame()
         {
             Application.Quit();
-#if UNITY_EDITOR
+            #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
-#endif
+            #endif
         }
     }
 }

@@ -29,7 +29,7 @@ namespace _Project.Scripts.Features.UI.HUD
         {
             if (_calculator == null || _playerProvider.LocalPlayer == null) return;
 
-            int percent = _calculator.CalculateProgress(_playerProvider.LocalPlayer.transform.position.x);
+            var percent = _calculator.CalculateProgress(_playerProvider.LocalPlayer.transform.position.x);
         
             if (percent != _lastPercent)
             {

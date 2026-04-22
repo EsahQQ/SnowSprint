@@ -1,17 +1,16 @@
 ﻿using _Project.Scripts.Features.Utils;
 using UnityEngine;
 
-namespace _Project.Scripts.Features.Data
+namespace _Project.Scripts.Features.UI.Shop.Settings
 {
-    [CreateAssetMenu(fileName = "ShopItem", menuName = "SO/New Item")]
     public class ShopItemConfig : ScriptableObject
     {
-        public string id;
-        public string displayName;
-        public int price;
-        public Sprite icon;
+        public string ID;
+        public string DisplayName;
+        public int Price;
+        public Sprite Icon;
 
-        public UpgradeType type;
-        public float value;
+        public UpgradeType Type;
+        public float Value;
     }
 }

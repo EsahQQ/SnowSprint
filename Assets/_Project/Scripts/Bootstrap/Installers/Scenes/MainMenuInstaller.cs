@@ -9,13 +9,13 @@ namespace _Project.Scripts.Bootstrap.Installers.Scenes
 {
     public class MainMenuInstaller : MonoInstaller
     {
-        [SerializeField] private MainMenuView mainMenuView;
+        [SerializeField] private MainMenuView _mainMenuView;
         public override void InstallBindings()
         {
             BindScenePipeline();
             Container.BindInterfacesAndSelfTo<SceneEntryPoint<MainMenuState>>().AsSingle();
             
-            Container.Bind<IMainMenuView>().FromInstance(mainMenuView).AsSingle();
+            Container.Bind<IMainMenuView>().FromInstance(_mainMenuView).AsSingle();
         }
 
         private void BindScenePipeline()

@@ -1,6 +1,7 @@
 using _Project.Scripts.Features.Player.Services;
 using _Project.Scripts.Features.SceneConstants;
 using _Project.Scripts.Features.UI;
+using _Project.Scripts.Features.UI.Shop;
 using _Project.Scripts.Infrastructure.StateMachine;
 using _Project.Scripts.Infrastructure.StateMachine.State;
 using Cysharp.Threading.Tasks;
@@ -23,8 +24,6 @@ namespace _Project.Scripts.Features.AppStates.Gameplay
 
         public override async UniTask OnEnter()
         {
-            Debug.Log("LevelFinishedState Enter");
-            
             _playerData.AddCoins(LevelReward);
             
             await _shopView.ProcessShopAsync();

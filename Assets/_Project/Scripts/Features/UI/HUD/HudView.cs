@@ -1,19 +1,12 @@
 using UnityEngine;
 
-namespace _Project.Scripts.Features.UI
+namespace _Project.Scripts.Features.UI.HUD
 {
     public class HudView : MonoBehaviour, IHudView
     {
-        [SerializeField] private GameObject hudPanel;
+        [SerializeField] private GameObject _hudPanel;
         
-        public void Show()
-        {
-            hudPanel.SetActive(true);
-        }
-
-        public void Hide()
-        {
-            hudPanel.SetActive(false);
-        }
+        public void Show() => _hudPanel.SetActive(true);
+        public void Hide() => _hudPanel.SetActive(false);
     }
 }

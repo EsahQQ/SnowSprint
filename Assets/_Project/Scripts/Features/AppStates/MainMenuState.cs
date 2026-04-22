@@ -21,8 +21,6 @@ namespace _Project.Scripts.Features.AppStates
         
         public override async UniTask OnEnter()
         {
-            Debug.Log("MainMenuState Enter");
-            
             await _mainMenuView.ProcessMenuAsync();
             await _networkSession.QuickJoinOrCreateAsync();
             

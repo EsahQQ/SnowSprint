@@ -1,5 +1,5 @@
 ﻿using System;
-using _Project.Scripts.Features.Data;
+using _Project.Scripts.Features.UI.Shop.Settings;
 
 namespace _Project.Scripts.Features.Player.Services
 {

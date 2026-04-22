@@ -22,13 +22,12 @@ namespace _Project.Scripts.Features.Player
         public override void OnNetworkSpawn()
         {
             _playerProvider.RegisterPlayer(this);
+
+            if (IsOwner) return;
             
-            if (!IsOwner)
-            {
-                var rb = GetComponent<Rigidbody2D>();
-                rb.bodyType = RigidbodyType2D.Kinematic;
-                rb.simulated = true;
-            }
+            var rb = GetComponent<Rigidbody2D>();
+            rb.bodyType = RigidbodyType2D.Kinematic;
+            rb.simulated = true;
         }
 
         public override void OnNetworkDespawn() => _playerProvider?.UnregisterPlayer(this);
@@ -65,7 +64,9 @@ namespace _Project.Scripts.Features.Player
         public void SetActive(bool isActive)
         {
             _isActive = isActive;
-            if (IsOwner) _physics.SetActive(isActive); 
+            
+            if (IsOwner) 
+                _physics.SetActive(isActive); 
         }
     }
 }

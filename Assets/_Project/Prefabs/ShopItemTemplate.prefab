@@ -47,7 +47,6 @@ CanvasRenderer:
   m_CullTransparentMesh: 1
 --- !u!114 &6685774456945028606
 MonoBehaviour:
-  m_SerializedVersion: 1
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -110,8 +109,9 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
-  m_lineSpacing: 16,12903
+  m_lineSpacing: 16
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
@@ -190,7 +190,6 @@ CanvasRenderer:
   m_CullTransparentMesh: 1
 --- !u!114 &5226156119026370999
 MonoBehaviour:
-  m_SerializedVersion: 1
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -247,6 +246,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -327,7 +327,6 @@ CanvasRenderer:
   m_CullTransparentMesh: 1
 --- !u!114 &5359256920670137609
 MonoBehaviour:
-  m_SerializedVersion: 1
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -384,6 +383,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -555,11 +555,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 941d2facd3eb424d8d97c52b0d73b350, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.UI.ShopItemView
-  iconImage: {fileID: 8783306491931370836}
-  nameText: {fileID: 5226156119026370999}
-  priceText: {fileID: 5359256920670137609}
-  buyButton: {fileID: 5103516313544038735}
-  canvasGroup: {fileID: 1795788880758787694}
+  _iconImage: {fileID: 8783306491931370836}
+  _nameText: {fileID: 5226156119026370999}
+  _priceText: {fileID: 5359256920670137609}
+  _buyButton: {fileID: 5103516313544038735}
+  _canvasGroup: {fileID: 1795788880758787694}
 --- !u!225 &1795788880758787694
 CanvasGroup:
   m_ObjectHideFlags: 0

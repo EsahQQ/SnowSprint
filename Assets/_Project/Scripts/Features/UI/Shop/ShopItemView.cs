@@ -1,6 +1,5 @@
-﻿using _Project.Scripts.Features.Data;
-using _Project.Scripts.Features.Player.Services;
-using _Project.Scripts.Features.Services;
+﻿using _Project.Scripts.Features.Player.Services;
+using _Project.Scripts.Features.UI.Shop.Settings;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -11,11 +10,11 @@ namespace _Project.Scripts.Features.UI.Shop
     public class ShopItemView : MonoBehaviour
     {
         [Header("UI Elements")]
-        [SerializeField] private Image iconImage;
-        [SerializeField] private TextMeshProUGUI nameText;
-        [SerializeField] private TextMeshProUGUI priceText;
-        [SerializeField] private Button buyButton;
-        [SerializeField] private CanvasGroup canvasGroup;
+        [SerializeField] private Image _iconImage;
+        [SerializeField] private TextMeshProUGUI _nameText;
+        [SerializeField] private TextMeshProUGUI _priceText;
+        [SerializeField] private Button _buyButton;
+        [SerializeField] private CanvasGroup _canvasGroup;
 
         private ShopItemConfig _config;
         private IPlayerDataService _dataService;
@@ -25,11 +24,11 @@ namespace _Project.Scripts.Features.UI.Shop
             _config = config;
             _dataService = dataService;
 
-            iconImage.sprite = config.icon;
-            nameText.text = config.displayName;
+            _iconImage.sprite = config.Icon;
+            _nameText.text = config.DisplayName;
             
-            buyButton.onClick.RemoveAllListeners();
-            buyButton.onClick.AddListener(TryBuy);
+            _buyButton.onClick.RemoveAllListeners();
+            _buyButton.onClick.AddListener(TryBuy);
 
             RefreshVisuals();
         }
@@ -49,19 +48,19 @@ namespace _Project.Scripts.Features.UI.Shop
 
         public void RefreshVisuals()
         {
-            bool isBought = _dataService.IsUpgradeBought(_config.id);
+            bool isBought = _dataService.IsUpgradeBought(_config.ID);
 
             if (isBought)
             {
-                priceText.text = "ХХ";
-                buyButton.interactable = false;
-                canvasGroup.alpha = 0.5f; 
+                _priceText.text = "ХХ";
+                _buyButton.interactable = false;
+                _canvasGroup.alpha = 0.5f; 
             }
             else
             {
-                priceText.text = _config.price.ToString();
-                buyButton.interactable = true;
-                canvasGroup.alpha = 1f;
+                _priceText.text = _config.Price.ToString();
+                _buyButton.interactable = true;
+                _canvasGroup.alpha = 1f;
             }
         }
     }

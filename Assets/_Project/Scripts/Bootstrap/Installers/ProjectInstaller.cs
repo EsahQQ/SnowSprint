@@ -12,14 +12,14 @@ namespace _Project.Scripts.Bootstrap.Installers
 {
     public class ProjectInstaller : MonoInstaller
     {
-        [SerializeField] private NetworkManager networkManagerPrefab; 
+        [SerializeField] private NetworkManager _networkManagerPrefab; 
         
         public override void InstallBindings()
         {
             Container.Bind<ISceneLoader>().To<SceneLoader>().AsSingle();
             BindInitPipeline();
             
-            var networkManagerInstance = Instantiate(networkManagerPrefab, null, true);
+            var networkManagerInstance = Instantiate(_networkManagerPrefab, null, true);
             DontDestroyOnLoad(networkManagerInstance.gameObject);
             Container.Bind<NetworkManager>().FromInstance(networkManagerInstance).AsSingle();
             
@@ -31,7 +31,6 @@ namespace _Project.Scripts.Bootstrap.Installers
             Container.Bind<IGlobalInitializer>().To<GlobalInitializer>().AsSingle();
             Container.Bind<IInitQueue>().To<InitQueue>().AsSingle();
             
-            Container.Bind<IInitTask>().To<LoadProfileTask>().AsSingle();
             Container.Bind<IInitTask>().To<GoodFpsTask>().AsSingle();
         }
     }

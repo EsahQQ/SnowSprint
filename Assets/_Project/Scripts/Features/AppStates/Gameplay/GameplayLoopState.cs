@@ -6,7 +6,6 @@ using _Project.Scripts.Features.UI.HUD;
 using _Project.Scripts.Infrastructure.StateMachine;
 using _Project.Scripts.Infrastructure.StateMachine.State;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 
 namespace _Project.Scripts.Features.AppStates.Gameplay
 {
@@ -17,7 +16,8 @@ namespace _Project.Scripts.Features.AppStates.Gameplay
         private readonly FinishTrigger _finishTrigger;
         private readonly IHudView _hudView;
 
-        public GameplayLoopState(IStateMachine stateMachine, IPlayerProvider playerProvider, FinishTrigger finishTrigger, IHudView hudView, LevelProgressView levelProgressView) : base(stateMachine)
+        public GameplayLoopState(IStateMachine stateMachine, IPlayerProvider playerProvider, FinishTrigger finishTrigger,
+            IHudView hudView, LevelProgressView levelProgressView) : base(stateMachine)
         {
             _playerProvider = playerProvider;
             _finishTrigger = finishTrigger;
@@ -29,7 +29,6 @@ namespace _Project.Scripts.Features.AppStates.Gameplay
         {
             _hudView.Show();
             _finishTrigger.OnPlayerFinished += OnLevelFinished;
-            
             
             foreach (var player in _playerProvider.AllPlayers)
                 InitializeAndActivatePlayer(player);

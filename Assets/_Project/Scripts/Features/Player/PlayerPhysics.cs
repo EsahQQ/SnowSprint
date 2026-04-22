@@ -10,6 +10,7 @@ namespace _Project.Scripts.Features.Player
     {
         [SerializeField] private Rigidbody2D _rb;
         [Inject] private PlayerSettings _playerSettings;
+        
         public bool IsGrounded { get; private set; }
         public Vector2 GroundNormal { get; private set; }
 
@@ -41,9 +42,7 @@ namespace _Project.Scripts.Features.Player
         private void AutoMove(float currentMaxSpeed, float currentAcceleration)
         {
             if (IsGrounded && _rb.linearVelocity.x < currentMaxSpeed)
-            {
                 _rb.AddForce(Vector2.right * currentAcceleration);
-            }
         }
 
         public void Jump(float jumpForce)

@@ -50,11 +50,8 @@ namespace _Project.Scripts.Features.AppStates.SetupStates
             
             await UniTask.WaitUntil(() => _playerProvider.LocalPlayer != null);
             
-            if (_camera.TryGetComponent<CinemachineBrain>(out var brain))
-            {
-                if (brain.ActiveVirtualCamera is CinemachineCamera vcam)
-                    vcam.Follow = _playerProvider.LocalPlayer.transform;
-            }
+            if (_camera.TryGetComponent<CinemachineBrain>(out var brain) && brain.ActiveVirtualCamera is CinemachineCamera vcam)
+                vcam.Follow = _playerProvider.LocalPlayer.transform;
         }
     }
 }

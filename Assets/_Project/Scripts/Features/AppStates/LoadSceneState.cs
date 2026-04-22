@@ -11,24 +11,17 @@ namespace _Project.Scripts.Features.AppStates
     {
         private readonly ISceneLoader _sceneLoader;
         
-        public LoadSceneState(ISceneLoader sceneLoader, IStateMachine stateMachine) : base(stateMachine)
-        {
-            _sceneLoader = sceneLoader;
-        }
+        public LoadSceneState(ISceneLoader sceneLoader, IStateMachine stateMachine) : base(stateMachine) 
+            => _sceneLoader = sceneLoader;
         
         public override async UniTask OnEnter()
         {
-            if (NetworkManager.Singleton != null && (NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsClient))
-            {
-                if (NetworkManager.Singleton.IsServer)
-                {
-                    NetworkManager.Singleton.SceneManager.LoadScene(Payload, LoadSceneMode.Single);
-                }
-            }
+            if (NetworkManager.Singleton != null 
+                && (NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsClient) 
+                && NetworkManager.Singleton.IsServer)
+                NetworkManager.Singleton.SceneManager.LoadScene(Payload, LoadSceneMode.Single);
             else
-            {
                 await _sceneLoader.Load(Payload);
-            }
         }
     }
 }

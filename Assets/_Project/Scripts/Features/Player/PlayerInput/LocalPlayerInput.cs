@@ -4,7 +4,7 @@ namespace _Project.Scripts.Features.Player.PlayerInput
 {
     public class LocalPlayerInput : AbstractPlayerInput
     {
-        [SerializeField] private float minSwipeLength = 100f;
+        [SerializeField] private float _minSwipeLength = 25f;
         
         private Vector2 _touchStartPos;
         private bool _isSwiping;
@@ -41,7 +41,7 @@ namespace _Project.Scripts.Features.Player.PlayerInput
                 {
                     var swipeVector = centerPos - _touchStartPos;
 
-                    if (swipeVector.magnitude > minSwipeLength && Mathf.Abs(swipeVector.y) > Mathf.Abs(swipeVector.x))
+                    if (swipeVector.magnitude > _minSwipeLength && Mathf.Abs(swipeVector.y) > Mathf.Abs(swipeVector.x))
                     {
                         if (swipeVector.y > 0) JumpTriggered = true;
                         else BoostTriggered = true;

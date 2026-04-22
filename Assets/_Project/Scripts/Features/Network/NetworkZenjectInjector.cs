@@ -7,7 +7,7 @@ namespace _Project.Scripts.Features.Network
     {
         private void Awake()
         {
-            var sceneContext = FindObjectOfType<SceneContext>();
+            var sceneContext = FindFirstObjectByType<SceneContext>();
             if (sceneContext != null)
                 sceneContext.Container.InjectGameObject(gameObject);
         }

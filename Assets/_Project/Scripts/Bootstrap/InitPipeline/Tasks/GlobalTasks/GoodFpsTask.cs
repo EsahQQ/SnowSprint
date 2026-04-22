@@ -8,7 +8,6 @@ namespace _Project.Scripts.Bootstrap.InitPipeline.Tasks.GlobalTasks
         public int Priority => GlobalInitPriority.GoodFps;
         public UniTask Execute()
         {
-            Debug.Log("GoodFps...");
             QualitySettings.vSyncCount = 1;
             Application.targetFrameRate = 60;
             return UniTask.CompletedTask;

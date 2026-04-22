@@ -7,13 +7,9 @@ namespace _Project.Scripts.Features.Network
     public class LobbyNetworkManager : NetworkBehaviour
     {
         public NetworkVariable<int> PlayersReadyCount { get; private set; } = new();
-        
         public event Action OnAllPlayersReady;
 
-        private void Start()
-        {
-            PlayersReadyCount.OnValueChanged += HandlePlayersReadyChanged;
-        }
+        private void Start() => PlayersReadyCount.OnValueChanged += HandlePlayersReadyChanged;
 
         public override void OnDestroy()
         {
