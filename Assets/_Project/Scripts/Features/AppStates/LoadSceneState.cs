@@ -1,4 +1,5 @@
-﻿using _Project.Scripts.Infrastructure.SceneManagement;
+﻿using _Project.Scripts.Features.SceneConstants;
+using _Project.Scripts.Infrastructure.SceneManagement;
 using _Project.Scripts.Infrastructure.StateMachine;
 using _Project.Scripts.Infrastructure.StateMachine.State.Payload;
 using Cysharp.Threading.Tasks;
@@ -16,10 +17,11 @@ namespace _Project.Scripts.Features.AppStates
         
         public override async UniTask OnEnter()
         {
-            if (NetworkManager.Singleton != null 
-                && (NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsClient) 
-                && NetworkManager.Singleton.IsServer)
-                NetworkManager.Singleton.SceneManager.LoadScene(Payload, LoadSceneMode.Single);
+            var nm = NetworkManager.Singleton;
+            bool isNetworkActive = nm != null && (nm.IsServer || nm.IsClient);
+
+            if (isNetworkActive && Payload != SceneNames.MainMenu && nm.IsServer) 
+                nm.SceneManager.LoadScene(Payload, LoadSceneMode.Single);
             else
                 await _sceneLoader.Load(Payload);
         }

@@ -48,7 +48,10 @@ namespace _Project.Scripts.Features.AppStates.Gameplay
         private void InitializeAndActivatePlayer(PlayerController player)
         {
             player.Initialize();
-            player.SetActive(true);
+            
+            
+            if (Unity.Netcode.NetworkManager.Singleton.IsServer)
+                player.SetActive(true);
         }
 
         public override void Update(float dt)
@@ -69,9 +72,10 @@ namespace _Project.Scripts.Features.AppStates.Gameplay
         {
             _finishTrigger.OnPlayerFinished -= OnLevelFinished;
             _playerProvider.OnAnyPlayerRegistered -= InitializeAndActivatePlayer; 
-
-            foreach (var player in _playerProvider.AllPlayers)
-                player.SetActive(false);
+            
+            if (Unity.Netcode.NetworkManager.Singleton.IsServer)
+                foreach (var player in _playerProvider.AllPlayers)
+                    player.SetActive(false);
 
             _hudView.Hide();
             return UniTask.CompletedTask;

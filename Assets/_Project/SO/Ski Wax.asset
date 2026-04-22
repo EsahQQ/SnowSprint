@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5b78b494011407897fc2e07e2c6fa61, type: 3}
   m_Name: Ski Wax
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Data.ShopItemConfig
-  id: ski_wax
-  displayName: "\u0421\u043C\u0430\u0437\u043A\u0430"
-  price: 20
-  icon: {fileID: 21300000, guid: 2f7d21682a297894ea6b88722a144b0a, type: 3}
-  type: 0
-  value: 30
+  ID: ski_wax
+  DisplayName: "\u0421\u043C\u0430\u0437\u043A\u0430 \u0434\u043B\u044F \u043B\u044B\u0436"
+  Price: 300
+  Icon: {fileID: 21300000, guid: 2f7d21682a297894ea6b88722a144b0a, type: 3}
+  Type: 1
+  Value: 5

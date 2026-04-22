@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5b78b494011407897fc2e07e2c6fa61, type: 3}
   m_Name: Cool Suit
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Data.ShopItemConfig
-  id: cool_suit
-  displayName: "\u041A\u043E\u0441\u0442\u044E\u043C"
-  price: 50
-  icon: {fileID: 21300000, guid: 61512bdd6cc9eb140b71f3a377c81870, type: 3}
-  type: 2
-  value: 5
+  ID: cool_suit
+  DisplayName: "\u041A\u0440\u0443\u0442\u043E\u0439 \u043A\u043E\u0441\u0442\u044E\u043C"
+  Price: 500
+  Icon: {fileID: 21300000, guid: 61512bdd6cc9eb140b71f3a377c81870, type: 3}
+  Type: 3
+  Value: 10

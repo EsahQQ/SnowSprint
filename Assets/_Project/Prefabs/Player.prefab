@@ -99,7 +99,7 @@ GameObject:
   - component: {fileID: 874085991425652111}
   - component: {fileID: 3910399039846060154}
   - component: {fileID: 8861909982968643303}
-  - component: {fileID: -6098977746692037129}
+  - component: {fileID: 39202030341881084}
   - component: {fileID: -5143241321726993671}
   - component: {fileID: 7147003220609383991}
   - component: {fileID: 2166774247028371530}
@@ -218,7 +218,7 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
---- !u!114 &-6098977746692037129
+--- !u!114 &39202030341881084
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -227,7 +227,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8651331337353559309}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 646912f8287241c4ba834b7141240be4, type: 3}
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
@@ -293,6 +293,12 @@ MonoBehaviour:
   _physics: {fileID: 2166774247028371530}
   _stats: {fileID: 1129771053046552589}
   _visuals: {fileID: 7437368269512421061}
+  _rb: {fileID: 874085991425652111}
+  IsRaceActive:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
 --- !u!114 &2166774247028371530
 MonoBehaviour:
   m_ObjectHideFlags: 0

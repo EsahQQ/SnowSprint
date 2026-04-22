@@ -1,5 +1,4 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 using Zenject;
 using PlayerSettings = _Project.Scripts.Features.Player.Settings.PlayerSettings;
 
@@ -16,21 +15,13 @@ namespace _Project.Scripts.Features.Player
 
         public void Initialize() { }
         
-        public void FixedTick(float currentMaxSpeed, float currentAcceleration, bool isOwner)
+        public void FixedTick(float currentMaxSpeed, float currentAcceleration)
         {
             CheckGround();
-            
-            if (isOwner) 
-                AutoMove(currentMaxSpeed, currentAcceleration);
+            AutoMove(currentMaxSpeed, currentAcceleration);
         }
 
-        public void SetActive(bool isActive)
-        { 
-            if (!isActive) _rb.linearVelocity = Vector2.zero;
-            _rb.simulated = isActive; 
-        }
-
-        private void CheckGround()
+        public void CheckGround()
         {
             var hit = Physics2D.Raycast(transform.position, Vector2.down, _playerSettings.RayLength, _playerSettings.GroundLayer);
             IsGrounded = hit.collider != null;
@@ -58,6 +49,12 @@ namespace _Project.Scripts.Features.Player
             if (!IsGrounded) return;
             
             _rb.AddForce(Vector2.right * boostForce, ForceMode2D.Impulse);
+        }
+
+        public void ResetVelocity()
+        {
+            _rb.linearVelocity = Vector2.zero;
+            _rb.angularVelocity = 0f;
         }
     }
 }

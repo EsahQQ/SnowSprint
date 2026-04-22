@@ -5,7 +5,6 @@ using _Project.Scripts.Infrastructure.StateMachine;
 using _Project.Scripts.Infrastructure.StateMachine.State;
 using Cysharp.Threading.Tasks;
 using Unity.Netcode;
-using UnityEngine;
 
 namespace _Project.Scripts.Features.AppStates.Network
 {
@@ -24,18 +23,24 @@ namespace _Project.Scripts.Features.AppStates.Network
         public override async UniTask OnEnter()
         {
             _lobbyNetworkManager.OnAllPlayersReady += StartGame;
-            
+            _lobbyNetworkManager.OnReadyStatsChanged += UpdateUI;
+           
+            UpdateUI(_lobbyNetworkManager.PlayersReadyCount.Value, _lobbyNetworkManager.TotalPlayersCount.Value);
+
             await _lobbyView.ProcessLobbyAsync();
             
             if (_lobbyNetworkManager.IsSpawned)
-                _lobbyNetworkManager.SetPlayerReadyServerRpc(true);
+                _lobbyNetworkManager.SetPlayerReadyServerRpc();
         }
 
         public override UniTask OnExit()
         {
             _lobbyNetworkManager.OnAllPlayersReady -= StartGame;
+            _lobbyNetworkManager.OnReadyStatsChanged -= UpdateUI;
             return UniTask.CompletedTask;
         }
+
+        private void UpdateUI(int readyCount, int totalCount) => _lobbyView.UpdateReadyCount(readyCount, totalCount);
 
         private void StartGame()
         {

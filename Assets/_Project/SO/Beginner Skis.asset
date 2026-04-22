@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5b78b494011407897fc2e07e2c6fa61, type: 3}
   m_Name: Beginner Skis
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Data.ShopItemConfig
-  id: beginner_skis
-  displayName: "\u041B\u044B\u0436\u0438 \u0443\u0440.2"
-  price: 75
-  icon: {fileID: 21300000, guid: 8a08b9ea1b1863c4491814752a3bfaa8, type: 3}
-  type: 1
-  value: 10
+  ID: beginner_skis
+  DisplayName: "\u041B\u044B\u0436\u0438 \u0443\u0440.2"
+  Price: 400
+  Icon: {fileID: 21300000, guid: 8a08b9ea1b1863c4491814752a3bfaa8, type: 3}
+  Type: 0
+  Value: 10
