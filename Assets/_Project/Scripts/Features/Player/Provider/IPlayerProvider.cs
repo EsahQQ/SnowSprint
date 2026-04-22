@@ -8,6 +8,7 @@ namespace _Project.Scripts.Features.Player.Provider
         PlayerController LocalPlayer { get; } 
         IReadOnlyList<PlayerController> AllPlayers { get; }
         event Action<PlayerController> OnLocalPlayerRegistered;
+        event Action<PlayerController> OnAnyPlayerRegistered;
         
         void RegisterPlayer(PlayerController player);
         void UnregisterPlayer(PlayerController player);

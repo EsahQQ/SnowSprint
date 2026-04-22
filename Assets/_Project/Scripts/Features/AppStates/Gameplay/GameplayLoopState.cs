@@ -1,4 +1,5 @@
 using _Project.Scripts.Features.Gameplay.Level;
+using _Project.Scripts.Features.Player;
 using _Project.Scripts.Features.Player.Provider;
 using _Project.Scripts.Features.UI;
 using _Project.Scripts.Features.UI.HUD;
@@ -26,32 +27,36 @@ namespace _Project.Scripts.Features.AppStates.Gameplay
 
         public override UniTask OnEnter()
         {
-            Debug.Log("GameplayLoopState Enter");
-            
             _hudView.Show();
-            _playerProvider.LocalPlayer.Initialize();
-            _playerProvider.LocalPlayer.SetActive(true);
             _finishTrigger.OnPlayerFinished += OnLevelFinished;
-
-            _levelProgressView.Init();
+            
+            
+            foreach (var player in _playerProvider.AllPlayers)
+                InitializeAndActivatePlayer(player);
+            
+            _playerProvider.OnAnyPlayerRegistered += InitializeAndActivatePlayer;
+            
+            WaitAndInitProgress().Forget();
             
             return UniTask.CompletedTask;
         }
-
-        public override UniTask OnExit()
+        private async UniTaskVoid WaitAndInitProgress()
         {
-            _finishTrigger.OnPlayerFinished -= OnLevelFinished;
-            _playerProvider.LocalPlayer.SetActive(false);
-            _hudView.Hide();
-            
-            return UniTask.CompletedTask;
+            await UniTask.WaitUntil(() => _playerProvider.LocalPlayer != null);
+            _levelProgressView.Init();
         }
 
-        private void OnLevelFinished() => StateMachine.RequestSwitchState<LevelFinishedState>();
+        private void InitializeAndActivatePlayer(PlayerController player)
+        {
+            player.Initialize();
+            player.SetActive(true);
+        }
 
         public override void Update(float dt)
         {
-            _playerProvider.LocalPlayer?.Tick();
+            foreach (var player in _playerProvider.AllPlayers)
+                player.Tick();
+
             _levelProgressView.Update();
         }
 
@@ -60,5 +65,19 @@ namespace _Project.Scripts.Features.AppStates.Gameplay
             foreach (var player in _playerProvider.AllPlayers)
                 player.FixedTick(fixedDt);
         }
+
+        public override UniTask OnExit()
+        {
+            _finishTrigger.OnPlayerFinished -= OnLevelFinished;
+            _playerProvider.OnAnyPlayerRegistered -= InitializeAndActivatePlayer; 
+
+            foreach (var player in _playerProvider.AllPlayers)
+                player.SetActive(false);
+
+            _hudView.Hide();
+            return UniTask.CompletedTask;
+        }
+
+        private void OnLevelFinished() => StateMachine.RequestSwitchState<LevelFinishedState>();
     }
 }

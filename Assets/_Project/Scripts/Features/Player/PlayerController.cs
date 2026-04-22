@@ -1,4 +1,4 @@
-using Unity.Netcode; // ДОБАВИЛИ
+using Unity.Netcode;
 using _Project.Scripts.Features.Player.PlayerInput;
 using _Project.Scripts.Features.Player.Provider;
 using UnityEngine;
@@ -6,7 +6,6 @@ using Zenject;
 
 namespace _Project.Scripts.Features.Player
 {
-    // НАСЛЕДУЕМ NETWORK BEHAVIOUR
     public class PlayerController : NetworkBehaviour
     {
         [SerializeField] private AbstractPlayerInput _input; 
@@ -18,10 +17,7 @@ namespace _Project.Scripts.Features.Player
         private bool _isActive;
 
         [Inject]
-        public void Construct(IPlayerProvider playerProvider)
-        {
-            _playerProvider = playerProvider;
-        }
+        public void Construct(IPlayerProvider playerProvider) => _playerProvider = playerProvider;
 
         public override void OnNetworkSpawn()
         {
@@ -29,14 +25,13 @@ namespace _Project.Scripts.Features.Player
             
             if (!IsOwner)
             {
-                GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+                var rb = GetComponent<Rigidbody2D>();
+                rb.bodyType = RigidbodyType2D.Kinematic;
+                rb.simulated = true;
             }
         }
 
-        public override void OnNetworkDespawn()
-        {
-            _playerProvider?.UnregisterPlayer(this);
-        }
+        public override void OnNetworkDespawn() => _playerProvider?.UnregisterPlayer(this);
 
         public void Initialize()
         {

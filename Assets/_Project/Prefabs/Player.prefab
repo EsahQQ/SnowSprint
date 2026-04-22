@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6954292748535664466}
   - component: {fileID: 5294415120896404604}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Visual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -106,7 +106,7 @@ GameObject:
   - component: {fileID: 1129771053046552589}
   - component: {fileID: 7437368269512421061}
   - component: {fileID: 2974210310714800656}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -343,4 +343,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd6775a3e82d416983f65d827a10352f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minSwipeLength: 100
+  minSwipeLength: 25
