@@ -6,7 +6,6 @@ using _Project.Scripts.Features.Player.Provider;
 using _Project.Scripts.Features.UI;
 using _Project.Scripts.Features.UI.Shop;
 using _Project.Scripts.Libs.Factories;
-using log4net.Core;
 using UnityEngine;
 using Zenject;
 
