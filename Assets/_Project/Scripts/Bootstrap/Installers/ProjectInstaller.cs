@@ -22,7 +22,7 @@ namespace _Project.Scripts.Bootstrap.Installers
             var networkManagerInstance = Instantiate(networkManagerPrefab, null, true);
             DontDestroyOnLoad(networkManagerInstance.gameObject);
             Container.Bind<NetworkManager>().FromInstance(networkManagerInstance).AsSingle();
-
+            
             Container.Bind<INetworkSessionService>().To<RelayNetworkSessionService>().AsSingle();
         }
 
@@ -32,7 +32,7 @@ namespace _Project.Scripts.Bootstrap.Installers
             Container.Bind<IInitQueue>().To<InitQueue>().AsSingle();
             
             Container.Bind<IInitTask>().To<LoadProfileTask>().AsSingle();
-            Container.Bind<IInitTask>().To<LoadLevelsTask>().AsSingle();
+            Container.Bind<IInitTask>().To<GoodFpsTask>().AsSingle();
         }
     }
 }

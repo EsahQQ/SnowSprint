@@ -6,7 +6,7 @@ namespace _Project.Scripts.Features.Network
 {
     public class LobbyNetworkManager : NetworkBehaviour
     {
-        public NetworkVariable<int> PlayersReadyCount = new NetworkVariable<int>(0);
+        public NetworkVariable<int> PlayersReadyCount { get; private set; } = new();
         
         public event Action OnAllPlayersReady;
 
