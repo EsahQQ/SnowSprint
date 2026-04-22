@@ -15,10 +15,12 @@ namespace _Project.Scripts.Features.Player
 
         public void Initialize() { }
         
-        public void FixedTick(float currentMaxSpeed, float currentAcceleration)
+        public void FixedTick(float currentMaxSpeed, float currentAcceleration, bool isOwner)
         {
             CheckGround();
-            AutoMove(currentMaxSpeed, currentAcceleration);
+            
+            if (isOwner) 
+                AutoMove(currentMaxSpeed, currentAcceleration);
         }
 
         public void SetActive(bool isActive)

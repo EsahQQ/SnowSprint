@@ -2,6 +2,7 @@
 using _Project.Scripts.Bootstrap.InitPipeline.Initializers.Scene;
 using _Project.Scripts.Features.AppStates.SetupStates;
 using _Project.Scripts.Features.Player;
+using _Project.Scripts.Features.Player.Factories;
 using _Project.Scripts.Features.Player.Provider;
 using _Project.Scripts.Features.UI;
 using _Project.Scripts.Features.UI.Shop;
@@ -30,10 +31,12 @@ namespace _Project.Scripts.Bootstrap.Installers.Scenes
             Container.Bind<IShopView>().FromInstance(shopView).AsSingle();
             
             Container.Bind<IPlayerProvider>().To<PlayerProvider>().AsSingle();
-            Container.Bind<PlayerController>().FromInstance(playerPrefab).AsSingle();
             Container.Bind<Transform>().FromInstance(spawnPoint).AsSingle().WhenInjectedInto<LevelSetupState>();
             
-            Container.Bind<Libs.Factories.IFactory<PlayerController>>().To<ZenjectPrefabFactory<PlayerController>>().AsSingle();
+            Container.Bind<Libs.Factories.IFactory<PlayerController>>()
+                .To<NetworkPlayerFactory>() 
+                .AsSingle()
+                .WithArguments(playerPrefab);
         }
     }
 }

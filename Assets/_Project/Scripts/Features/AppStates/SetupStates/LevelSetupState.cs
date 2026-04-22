@@ -6,6 +6,7 @@ using _Project.Scripts.Infrastructure.StateMachine.State;
 using _Project.Scripts.Libs.Factories;
 using Cysharp.Threading.Tasks;
 using Unity.Cinemachine;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace _Project.Scripts.Features.AppStates.SetupStates
@@ -36,17 +37,24 @@ namespace _Project.Scripts.Features.AppStates.SetupStates
 
         public async UniTask Setup()
         {
-            var player = _factoryPlayer.Create();
-            player.transform.position = _spawnPoint.position;
-            _playerProvider.RegisterPlayer(player);
-            if (_camera.TryGetComponent<CinemachineBrain>(out var brain))
+            if (NetworkManager.Singleton.IsServer)
             {
-                var vcam = brain.ActiveVirtualCamera as CinemachineCamera;
-                if (vcam != null)
-                    vcam.Follow = player.transform;
+                foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
+                {
+                    var player = _factoryPlayer.Create();
+                    player.transform.position = _spawnPoint.position;
+       
+                    player.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
+                }
             }
             
-            await UniTask.CompletedTask;
+            await UniTask.WaitUntil(() => _playerProvider.LocalPlayer != null);
+            
+            if (_camera.TryGetComponent<CinemachineBrain>(out var brain))
+            {
+                if (brain.ActiveVirtualCamera is CinemachineCamera vcam)
+                    vcam.Follow = _playerProvider.LocalPlayer.transform;
+            }
         }
     }
 }

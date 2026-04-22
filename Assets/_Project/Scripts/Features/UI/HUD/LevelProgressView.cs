@@ -23,13 +23,13 @@ namespace _Project.Scripts.Features.UI.HUD
             _progressText = progressText;
         }
 
-        public void Init() => _calculator = new LevelProgressCalculator(_playerProvider.Player.transform.position.x, _finishTrigger.transform.position.x);
+        public void Init() => _calculator = new LevelProgressCalculator(_playerProvider.LocalPlayer.transform.position.x, _finishTrigger.transform.position.x);
         
         public void Update()
         {
-            if (_calculator == null || _playerProvider.Player == null) return;
+            if (_calculator == null || _playerProvider.LocalPlayer == null) return;
 
-            int percent = _calculator.CalculateProgress(_playerProvider.Player.transform.position.x);
+            int percent = _calculator.CalculateProgress(_playerProvider.LocalPlayer.transform.position.x);
         
             if (percent != _lastPercent)
             {

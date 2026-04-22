@@ -29,8 +29,8 @@ namespace _Project.Scripts.Features.AppStates.Gameplay
             Debug.Log("GameplayLoopState Enter");
             
             _hudView.Show();
-            _playerProvider.Player.Initialize();
-            _playerProvider.Player.SetActive(true);
+            _playerProvider.LocalPlayer.Initialize();
+            _playerProvider.LocalPlayer.SetActive(true);
             _finishTrigger.OnPlayerFinished += OnLevelFinished;
 
             _levelProgressView.Init();
@@ -41,7 +41,7 @@ namespace _Project.Scripts.Features.AppStates.Gameplay
         public override UniTask OnExit()
         {
             _finishTrigger.OnPlayerFinished -= OnLevelFinished;
-            _playerProvider.Player.SetActive(false);
+            _playerProvider.LocalPlayer.SetActive(false);
             _hudView.Hide();
             
             return UniTask.CompletedTask;
@@ -51,13 +51,14 @@ namespace _Project.Scripts.Features.AppStates.Gameplay
 
         public override void Update(float dt)
         {
-            _playerProvider.Player.Tick();
+            _playerProvider.LocalPlayer?.Tick();
             _levelProgressView.Update();
         }
 
         public override void FixedUpdate(float fixedDt)
         {
-            _playerProvider.Player.FixedTick(fixedDt);
+            foreach (var player in _playerProvider.AllPlayers)
+                player.FixedTick(fixedDt);
         }
     }
 }
