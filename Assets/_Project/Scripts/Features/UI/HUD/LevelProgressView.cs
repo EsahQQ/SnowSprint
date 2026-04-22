@@ -8,27 +8,24 @@ using Zenject;
 
 namespace _Project.Scripts.Features.UI.HUD
 {
-    public class LevelProgressView : MonoBehaviour
+    public class LevelProgressView
     {
-        [SerializeField] private TextMeshProUGUI progressText;
-
-        private IPlayerProvider _playerProvider;
-        private FinishTrigger _finishTrigger;
+        private readonly TextMeshProUGUI _progressText;
+        private readonly IPlayerProvider _playerProvider;
+        private readonly FinishTrigger _finishTrigger;
         private LevelProgressCalculator _calculator;
         private int _lastPercent = -1;
-
-        [Inject]
-        public void Construct(IPlayerProvider playerProvider, FinishTrigger finishTrigger)
+        
+        public LevelProgressView(IPlayerProvider playerProvider, FinishTrigger finishTrigger, TextMeshProUGUI progressText)
         {
             _playerProvider = playerProvider;
             _finishTrigger = finishTrigger;
-            _playerProvider.OnPlayerRegistered += SetupCalculator;
+            _progressText = progressText;
         }
+
+        public void Init() => _calculator = new LevelProgressCalculator(_playerProvider.Player.transform.position.x, _finishTrigger.transform.position.x);
         
-        private void OnDestroy() => _playerProvider.OnPlayerRegistered -= SetupCalculator;
-        private void SetupCalculator(PlayerController player) => _calculator = new LevelProgressCalculator(player.transform.position.x, _finishTrigger.transform.position.x);
-        
-        private void Update()
+        public void Update()
         {
             if (_calculator == null || _playerProvider.Player == null) return;
 
@@ -36,7 +33,7 @@ namespace _Project.Scripts.Features.UI.HUD
         
             if (percent != _lastPercent)
             {
-                progressText.text = $"{percent}%";
+                _progressText.text = $"{percent}%";
                 _lastPercent = percent;
             }
         }

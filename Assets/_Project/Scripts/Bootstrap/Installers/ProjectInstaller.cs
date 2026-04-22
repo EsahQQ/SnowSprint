@@ -2,6 +2,7 @@
 using _Project.Scripts.Bootstrap.InitPipeline.Queue;
 using _Project.Scripts.Bootstrap.InitPipeline.Tasks;
 using _Project.Scripts.Bootstrap.InitPipeline.Tasks.GlobalTasks;
+using _Project.Scripts.Features.Network;
 using _Project.Scripts.Infrastructure.SceneManagement;
 using Zenject;
 
@@ -13,6 +14,8 @@ namespace _Project.Scripts.Bootstrap.Installers
         {
             Container.Bind<ISceneLoader>().To<SceneLoader>().AsSingle();
             BindInitPipeline();
+            
+            Container.Bind<INetworkSessionService>().To<MockNetworkSessionService>().AsSingle();
         }
 
         private void BindInitPipeline()

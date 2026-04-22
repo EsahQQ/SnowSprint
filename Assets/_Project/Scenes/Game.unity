@@ -700,7 +700,6 @@ GameObject:
   - component: {fileID: 388286978}
   - component: {fileID: 388286980}
   - component: {fileID: 388286979}
-  - component: {fileID: 388286981}
   m_Layer: 5
   m_Name: Progress
   m_TagString: Untagged
@@ -827,19 +826,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 388286977}
   m_CullTransparentMesh: 1
---- !u!114 &388286981
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 388286977}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 335629b20f314b4584edb5200e9d61da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  progressText: {fileID: 388286979}
 --- !u!1 &403080890
 GameObject:
   m_ObjectHideFlags: 0
@@ -3287,6 +3273,7 @@ MonoBehaviour:
   finishTrigger: {fileID: 1062955814}
   shopDatabase: {fileID: 11400000, guid: 442d403359554234a8b1e240a6f7aa99, type: 2}
   playerSettings: {fileID: 11400000, guid: d4d91ecf79a7fa442a28297880e22cc8, type: 2}
+  progressText: {fileID: 388286979}
 --- !u!114 &1859992698
 MonoBehaviour:
   m_ObjectHideFlags: 0
