@@ -49,7 +49,6 @@ namespace _Project.Scripts.Features.AppStates.Gameplay
         {
             player.Initialize();
             
-            
             if (Unity.Netcode.NetworkManager.Singleton.IsServer)
                 player.SetActive(true);
         }

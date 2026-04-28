@@ -16,7 +16,7 @@ namespace _Project.Scripts.Features.Player
 
         private IPlayerProvider _playerProvider;
         
-        public NetworkVariable<bool> IsRaceActive = new NetworkVariable<bool>(false);
+        public NetworkVariable<bool> IsRaceActive = new NetworkVariable<bool>();
         
         private float _serverMaxSpeed;
         private float _serverAcceleration;
@@ -30,7 +30,7 @@ namespace _Project.Scripts.Features.Player
         {
             _playerProvider.RegisterPlayer(this);
             
-            _rb.isKinematic = !IsServer;
+            _rb.bodyType = IsServer ? RigidbodyType2D.Dynamic : RigidbodyType2D.Kinematic;
             _rb.simulated = true;
 
             if (IsOwner)
@@ -73,9 +73,7 @@ namespace _Project.Scripts.Features.Player
             if (!IsRaceActive.Value) return;
             
             if (IsServer)
-            {
                 _physics.FixedTick(_serverMaxSpeed, _serverAcceleration);
-            }
             
             _physics.CheckGround(); 
             _visuals.FixedTick(fixedDt, _physics.GroundNormal);

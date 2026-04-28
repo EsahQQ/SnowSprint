@@ -3,6 +3,7 @@ using _Project.Scripts.Bootstrap.InitPipeline.Queue;
 using _Project.Scripts.Bootstrap.InitPipeline.Tasks;
 using _Project.Scripts.Bootstrap.InitPipeline.Tasks.GlobalTasks;
 using _Project.Scripts.Features.Network;
+using _Project.Scripts.Features.Network.Auth;
 using _Project.Scripts.Infrastructure.SceneManagement;
 using Unity.Netcode;
 using UnityEngine;
@@ -24,6 +25,7 @@ namespace _Project.Scripts.Bootstrap.Installers
             Container.Bind<NetworkManager>().FromInstance(networkManagerInstance).AsSingle();
             
             Container.Bind<INetworkSessionService>().To<RelayNetworkSessionService>().AsSingle();
+            Container.Bind<IAuthService>().To<UnityAuthService>().AsSingle();
         }
 
         private void BindInitPipeline()

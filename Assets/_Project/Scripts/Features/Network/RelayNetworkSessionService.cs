@@ -24,21 +24,8 @@ namespace _Project.Scripts.Features.Network
 
         public async UniTask QuickJoinOrCreateAsync()
         {
-            await InitializeUnityServicesAsync();
             if (!await TryQuickJoinLobbyAsync()) 
                 await CreateLobbyAndRelayAsync();
-        }
-
-        private async UniTask InitializeUnityServicesAsync()
-        {
-            if (_isInitialized) return;
-            
-            await UnityServices.InitializeAsync();
-            
-            if (!AuthenticationService.Instance.IsSignedIn)
-                await AuthenticationService.Instance.SignInAnonymouslyAsync();
-            
-            _isInitialized = true;
         }
 
         private async UniTask<bool> TryQuickJoinLobbyAsync()
