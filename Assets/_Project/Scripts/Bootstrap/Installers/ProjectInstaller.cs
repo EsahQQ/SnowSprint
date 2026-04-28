@@ -4,6 +4,8 @@ using _Project.Scripts.Bootstrap.InitPipeline.Tasks;
 using _Project.Scripts.Bootstrap.InitPipeline.Tasks.GlobalTasks;
 using _Project.Scripts.Features.Network;
 using _Project.Scripts.Features.Network.Auth;
+using _Project.Scripts.Features.Player.Services;
+using _Project.Scripts.Features.UI.Shop.Settings;
 using _Project.Scripts.Infrastructure.SceneManagement;
 using Unity.Netcode;
 using UnityEngine;
@@ -14,7 +16,7 @@ namespace _Project.Scripts.Bootstrap.Installers
     public class ProjectInstaller : MonoInstaller
     {
         [SerializeField] private NetworkManager _networkManagerPrefab; 
-        
+        [SerializeField] private ShopDatabase _shopDatabase;
         public override void InstallBindings()
         {
             Container.Bind<ISceneLoader>().To<SceneLoader>().AsSingle();
@@ -26,6 +28,9 @@ namespace _Project.Scripts.Bootstrap.Installers
             
             Container.Bind<INetworkSessionService>().To<RelayNetworkSessionService>().AsSingle();
             Container.Bind<IAuthService>().To<UnityAuthService>().AsSingle();
+            
+            Container.Bind<IPlayerDataService>().To<CloudPlayerDataService>().AsSingle();
+            Container.Bind<ShopDatabase>().FromInstance(_shopDatabase).AsSingle();
         }
 
         private void BindInitPipeline()

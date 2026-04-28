@@ -1,6 +1,7 @@
 ﻿using _Project.Scripts.Bootstrap.EntryPoint;
 using _Project.Scripts.Bootstrap.InitPipeline.Initializers.Scene;
 using _Project.Scripts.Features.AppStates;
+using _Project.Scripts.Features.Player.Services;
 using _Project.Scripts.Features.UI;
 using UnityEngine;
 using Zenject;

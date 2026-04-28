@@ -2,6 +2,7 @@
 using _Project.Scripts.Features.Network.Auth;
 using _Project.Scripts.Features.SceneConstants;
 using _Project.Scripts.Features.UI;
+using _Project.Scripts.Features.Player.Services; 
 using _Project.Scripts.Infrastructure.StateMachine;
 using _Project.Scripts.Infrastructure.StateMachine.State;
 using Cysharp.Threading.Tasks;
@@ -15,12 +16,19 @@ namespace _Project.Scripts.Features.AppStates
         private readonly INetworkSessionService _networkSession;
         private readonly IAuthService _authService;
 
-        public MainMenuState(IStateMachine stateMachine, IMainMenuView mainMenuView, INetworkSessionService networkSession, IAuthService authService) 
-            : base(stateMachine)
+        private readonly IPlayerDataService _playerDataService;
+
+        public MainMenuState(
+            IStateMachine stateMachine, 
+            IMainMenuView mainMenuView, 
+            INetworkSessionService networkSession, 
+            IAuthService authService,
+            IPlayerDataService playerDataService) : base(stateMachine)
         {
             _mainMenuView = mainMenuView;
             _networkSession = networkSession;
             _authService = authService;
+            _playerDataService = playerDataService;
         }
         
         public override async UniTask OnEnter()
@@ -28,10 +36,11 @@ namespace _Project.Scripts.Features.AppStates
             Debug.Log("MainMenuState Enter");
 
             await _authService.InitializeAsync();
-            
             _mainMenuView.OnLogoutClicked += HandleLogout;
             RefreshProfileUI();
             
+            if (_authService.IsSignedIn) await _playerDataService.LoadProfileFromCloudAsync();
+
             while (true)
             {
                 await _mainMenuView.ProcessMenuAsync(); 
@@ -39,8 +48,9 @@ namespace _Project.Scripts.Features.AppStates
                 if (!_authService.IsSignedIn)
                 {
                     bool authSuccess = await HandleAuthenticationFlowAsync();
-                    
                     if (!authSuccess) continue; 
+
+                    await _playerDataService.LoadProfileFromCloudAsync();
                 }
 
                 break;
