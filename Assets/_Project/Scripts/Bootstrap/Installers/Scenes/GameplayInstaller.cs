@@ -1,5 +1,4 @@
 ﻿using _Project.Scripts.Bootstrap.EntryPoint;
-using _Project.Scripts.Bootstrap.InitPipeline.Initializers.Scene;
 using _Project.Scripts.Features.AppStates.SetupStates;
 using _Project.Scripts.Features.Player;
 using _Project.Scripts.Features.Player.Factories;
@@ -24,7 +23,6 @@ namespace _Project.Scripts.Bootstrap.Installers.Scenes
         
         public override void InstallBindings()
         {
-            Container.Bind<ISceneInitializer>().To<NullSceneInitializer>().AsSingle();
             Container.BindInterfacesAndSelfTo<SceneEntryPoint<LevelSetupState>>().AsSingle();
             
             Container.Bind<IHudView>().FromInstance(_hudView).AsSingle();

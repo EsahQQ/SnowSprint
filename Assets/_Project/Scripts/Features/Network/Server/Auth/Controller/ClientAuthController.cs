@@ -1,28 +1,25 @@
 using System;
-using _Project.Scripts.Features.AppStates;
-using _Project.Scripts.Features.AppStates.Network;
 using _Project.Scripts.Features.Network.Server.Auth.Data;
-using _Project.Scripts.Features.SceneConstants;
 using _Project.Scripts.Features.UI.Menu;
 using _Project.Scripts.Infrastructure.StateMachine;
 using Mirror;
 using UnityEngine;
 using Zenject;
 
-namespace _Project.Scripts.Features.Network.Server.Auth
+namespace _Project.Scripts.Features.Network.Server.Auth.Controller
 {
-    public class ClientAuthController : IInitializable, IDisposable
+    public class ClientAuthController : IInitializable, IDisposable, IClientAuthController
     {
         private readonly IMainMenuView _view;
-        private readonly IStateMachine _stateMachine;
         private string _pendingEmail;
         private bool _isInitialized; 
         private bool _isLoggedIn;
 
-        public ClientAuthController(IMainMenuView view, IStateMachine stateMachine)
+        public event Action RequestLobby;
+
+        public ClientAuthController(IMainMenuView view)
         {
             _view = view;
-            _stateMachine = stateMachine;
         }
 
         public void Initialize()
@@ -45,11 +42,11 @@ namespace _Project.Scripts.Features.Network.Server.Auth
             _view.OnLogoutClicked -= HandleLogout;
         }
 
-        private void HandlePlayClicked()
+        public void HandlePlayClicked()
         {
             if (_isLoggedIn)
             {
-                _stateMachine.RequestSwitchState<LoadSceneState, string>(SceneNames.LobbyMenu);
+                RequestLobby?.Invoke();
                 return;
             }
 
@@ -63,15 +60,15 @@ namespace _Project.Scripts.Features.Network.Server.Auth
             }
             _view.ShowLoginPanel(true);
         }
-        
-        private void HandleLogout()
+
+        public void HandleLogout()
         {
             _isLoggedIn = false;
             _view.UpdateProfileUI(false, string.Empty);
             NetworkManager.singleton.StopHost();
         }
 
-        private void HandleAuthAction(AuthData input)
+        public void HandleAuthAction(AuthData input)
         {
             if (!string.IsNullOrEmpty(input.Email))
                 _pendingEmail = input.Email;
@@ -112,7 +109,7 @@ namespace _Project.Scripts.Features.Network.Server.Auth
             }
         }
 
-        private void OnClientReceiveResponse(AuthResponseMessage msg)
+        public void OnClientReceiveResponse(AuthResponseMessage msg)
         {
             switch (msg.Type)
             {

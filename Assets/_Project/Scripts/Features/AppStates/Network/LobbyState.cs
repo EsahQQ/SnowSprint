@@ -4,7 +4,8 @@ using _Project.Scripts.Features.UI.Lobby;
 using _Project.Scripts.Infrastructure.StateMachine;
 using _Project.Scripts.Infrastructure.StateMachine.State;
 using Cysharp.Threading.Tasks;
-using Mirror; 
+using Mirror;
+using UnityEngine;
 
 namespace _Project.Scripts.Features.AppStates.Network
 {
@@ -24,11 +25,13 @@ namespace _Project.Scripts.Features.AppStates.Network
         {
             _lobbyNetworkManager.OnAllPlayersReady += StartGame;
             _lobbyNetworkManager.OnReadyStatsChanged += UpdateUI;
+            await UniTask.WaitUntil(() => NetworkClient.active);
             
-            await UniTask.WaitUntil(() => NetworkClient.ready);
+            if (!NetworkClient.ready)
+                NetworkClient.Ready();
             
             UpdateUI(_lobbyNetworkManager.PlayersReadyCount, _lobbyNetworkManager.TotalPlayersCount);
-
+            
             await _lobbyView.ProcessLobbyAsync();
             
             _lobbyNetworkManager.CmdSetPlayerReady(); 

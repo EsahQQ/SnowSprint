@@ -1,8 +1,4 @@
-﻿using _Project.Scripts.Bootstrap.InitPipeline.Initializers.Global;
-using _Project.Scripts.Bootstrap.InitPipeline.Queue;
-using _Project.Scripts.Bootstrap.InitPipeline.Tasks;
-using _Project.Scripts.Bootstrap.InitPipeline.Tasks.GlobalTasks;
-using _Project.Scripts.Features.Network.Lobby;
+﻿using _Project.Scripts.Features.Network.Lobby;
 using _Project.Scripts.Features.UI.Shop.Settings;
 using _Project.Scripts.Infrastructure.SceneManagement;
 using _Project.Scripts.Features.Network.Server.Email;
@@ -22,7 +18,6 @@ namespace _Project.Scripts.Bootstrap.Installers
         public override void InstallBindings()
         {
             Container.Bind<ISceneLoader>().To<SceneLoader>().AsSingle();
-            BindInitPipeline();
             
             Container.Bind<IServerDatabase>().To<LocalJsonDatabase>().AsSingle();
             Container.Bind<IEmailService>().To<SmtpEmailService>().AsSingle();
@@ -38,13 +33,6 @@ namespace _Project.Scripts.Bootstrap.Installers
                 .NonLazy(); 
             
             Container.Bind<ShopDatabase>().FromInstance(_shopDatabase).AsSingle();
-        }
-
-        private void BindInitPipeline()
-        {
-            Container.Bind<IGlobalInitializer>().To<GlobalInitializer>().AsSingle();
-            Container.Bind<IInitQueue>().To<InitQueue>().AsSingle();
-            Container.Bind<IInitTask>().To<GoodFpsTask>().AsSingle();
         }
     }
 }

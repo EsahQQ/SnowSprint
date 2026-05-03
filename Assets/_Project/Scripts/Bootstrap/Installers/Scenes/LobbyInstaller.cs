@@ -1,5 +1,4 @@
 using _Project.Scripts.Bootstrap.EntryPoint;
-using _Project.Scripts.Bootstrap.InitPipeline.Initializers.Scene;
 using _Project.Scripts.Features.AppStates.Network;
 using _Project.Scripts.Features.UI.Lobby;
 using UnityEngine;
@@ -13,7 +12,6 @@ namespace _Project.Scripts.Bootstrap.Installers.Scenes
         
         public override void InstallBindings()
         {
-            Container.Bind<ISceneInitializer>().To<NullSceneInitializer>().AsSingle();
             Container.BindInterfacesAndSelfTo<SceneEntryPoint<LobbyState>>().AsSingle();
             
             Container.Bind<ILobbyView>().FromInstance(_lobbyView).AsSingle();
