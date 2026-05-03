@@ -132,16 +132,17 @@ namespace _Project.Scripts.Features.Network.Server.Auth
             return;
         }
 
-        // Сохраняем маппинг до ServerAccept
         _authenticatedUsers[conn.connectionId] = msg.Email;
-        Debug.Log($"[Auth] Игрок {msg.Email} аутентифицирован (connId={conn.connectionId})");
-
+    
         conn.Send(new AuthResponseMessage
         {
             Type = msg.Type, Success = true, Message = user.Username
         });
 
         ServerAccept(conn);
+
+        if (LobbyNetworkManager.Singleton != null)
+            LobbyNetworkManager.Singleton.OnPlayerAuthenticated(conn);
     }
 
     private void OnGetProfileRequest(NetworkConnectionToClient conn, GetProfileRequest msg)

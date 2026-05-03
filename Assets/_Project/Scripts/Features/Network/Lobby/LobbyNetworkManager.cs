@@ -1,91 +1,105 @@
-using System;
 using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
 
 namespace _Project.Scripts.Features.Network.Lobby
 {
-    public class LobbyNetworkManager : NetworkBehaviour
+    public class LobbyNetworkManager : MonoBehaviour
     {
         public static LobbyNetworkManager Singleton { get; private set; }
 
-        public override void OnStartServer()
-        {
-            Singleton = this;
-        }
-
-        private void Awake()
-        {
-            Debug.Log($"[LNM] Awake. isServer={isServer} isClient={isClient}");
-        }
-
-        public override void OnStartClient()
-        {
-            Debug.Log($"[LNM] OnStartClient. netId={netId}");
-            Singleton = this;
-        }
-
-        public override void OnStopClient()
-        {
-            if (Singleton == this) Singleton = null;
-        }
-
-        public override void OnStopServer()
-        {
-            if (Singleton == this) Singleton = null;
-        }
-
-        [SyncVar(hook = nameof(OnStatsChanged))]
-        public int PlayersReadyCount;
-
-        [SyncVar(hook = nameof(OnStatsChanged))]
-        public int TotalPlayersCount;
-
-        public event Action<int, int> OnReadyStatsChanged;
-        public event Action OnAllPlayersReady;
-
         private readonly HashSet<int> _readyClients = new();
+        private int _totalPlayers;
+        private int _readyCount;
 
-        [Command(requiresAuthority = false)]
-        public void CmdSetPlayerReady(NetworkConnectionToClient sender = null)
+        private void Awake() => Singleton = this;
+
+        private void OnDestroy()
         {
-            if (sender == null) return;
+            if (Singleton == this) Singleton = null;
+        }
 
-            if (_readyClients.Add(sender.connectionId))
-            {
-                PlayersReadyCount = _readyClients.Count;
-                UpdateTotalPlayers();
-            }
+        [ServerCallback]
+        public void ServerInitialize()
+        {
+            NetworkServer.RegisterHandler<LobbyReadyMessage>(OnClientReady);
+            Debug.Log("[LNM] Сервер лобби инициализирован");
         }
 
         [ServerCallback]
         private void Update()
         {
-            if (NetworkServer.connections.Count != TotalPlayersCount)
-                UpdateTotalPlayers();
+            // ✅ Считаем только аутентифицированных
+            int authenticated = GetAuthenticatedCount();
+            if (authenticated != _totalPlayers)
+            {
+                _totalPlayers = authenticated;
+                BroadcastStatus();
+            }
         }
 
         [ServerCallback]
-        private void UpdateTotalPlayers()
+        private void OnClientReady(NetworkConnectionToClient conn, LobbyReadyMessage msg)
         {
-            TotalPlayersCount = NetworkServer.connections.Count;
-            CheckAllReady();
+            if (_readyClients.Add(conn.connectionId))
+            {
+                _readyCount = _readyClients.Count;
+                BroadcastStatus();
+                CheckAllReady();
+            }
         }
 
-        private void OnStatsChanged(int _, int __)
+        [ServerCallback]
+        private void BroadcastStatus()
         {
-            Debug.Log($"[Lobby] SyncVar → {PlayersReadyCount}/{TotalPlayersCount}");
-            OnReadyStatsChanged?.Invoke(PlayersReadyCount, TotalPlayersCount);
+            var msg = new LobbyStatusMessage
+            {
+                ReadyCount = _readyCount,
+                TotalCount = _totalPlayers
+            };
+
+            // ✅ Отправляем только аутентифицированным
+            foreach (var conn in NetworkServer.connections.Values)
+            {
+                if (conn.isAuthenticated)
+                    conn.Send(msg);
+            }
+
+            Debug.Log($"[LNM] Broadcast: {_readyCount}/{_totalPlayers}");
         }
 
-        [Server]
+        [ServerCallback]
         private void CheckAllReady()
         {
-            if (TotalPlayersCount > 0 && PlayersReadyCount >= TotalPlayersCount)
+            if (_totalPlayers > 0 && _readyCount >= _totalPlayers)
             {
-                Debug.Log("[Lobby] Все готовы! Уведомляем подписчиков...");
-                OnAllPlayersReady?.Invoke();
+                Debug.Log("[LNM] Все готовы!");
+                foreach (var conn in NetworkServer.connections.Values)
+                    if (conn.isAuthenticated)
+                        conn.Send(new LobbyStartGameMessage());
             }
+        }
+
+        // ✅ Новый метод — вызвать после аутентификации клиента
+        [ServerCallback]
+        public void OnPlayerAuthenticated(NetworkConnectionToClient conn)
+        {
+            _totalPlayers = GetAuthenticatedCount();
+            // Отправляем текущий статус только что вошедшему игроку
+            conn.Send(new LobbyStatusMessage
+            {
+                ReadyCount = _readyCount,
+                TotalCount = _totalPlayers
+            });
+            BroadcastStatus();
+        }
+
+        private int GetAuthenticatedCount()
+        {
+            int count = 0;
+            foreach (var conn in NetworkServer.connections.Values)
+                if (conn.isAuthenticated) count++;
+            return count;
         }
     }
 }

@@ -11,7 +11,6 @@ namespace _Project.Scripts.Features.Network.Lobby
     public class LobbyController : IInitializable, IDisposable
     {
         private readonly ILobbyView _lobbyView;
-        private LobbyNetworkManager _lobby;
 
         public LobbyController(ILobbyView lobbyView)
         {
@@ -20,45 +19,43 @@ namespace _Project.Scripts.Features.Network.Lobby
 
         public void Initialize()
         {
+            NetworkClient.RegisterHandler<LobbyStatusMessage>(OnStatusReceived);
+            NetworkClient.RegisterHandler<LobbyStartGameMessage>(OnStartGame);
+
+            if (NetworkServer.active)
+            {
+                var lnm = LobbyNetworkManager.Singleton;
+                if (lnm != null)
+                    lnm.ServerInitialize();
+                else
+                    Debug.LogError("[LobbyController] LobbyNetworkManager не найден в сцене!");
+            }
+
             RunAsync().Forget();
         }
 
         public void Dispose()
         {
-            if (_lobby == null) return;
-            _lobby.OnAllPlayersReady -= OnAllPlayersReady;
-            _lobby.OnReadyStatsChanged -= OnReadyStatsChanged;
-            _lobby = null;
+            NetworkClient.UnregisterHandler<LobbyStatusMessage>();
+            NetworkClient.UnregisterHandler<LobbyStartGameMessage>();
         }
 
         private async UniTaskVoid RunAsync()
         {
-            Debug.Log("[LobbyController] Ожидаем LobbyNetworkManager...");
-
-            await UniTask.WaitUntil(() => LobbyNetworkManager.Singleton != null);
-
-            Debug.Log("[LobbyController] LobbyNetworkManager готов!");
-
-            _lobby = LobbyNetworkManager.Singleton;
-            _lobby.OnAllPlayersReady += OnAllPlayersReady;
-            _lobby.OnReadyStatsChanged += OnReadyStatsChanged;
-
-            // Актуализируем UI сразу после подписки
-            OnReadyStatsChanged(_lobby.PlayersReadyCount, _lobby.TotalPlayersCount);
-
-            // Ждём нажатия кнопки Ready
+            Debug.Log("[LobbyController] Ждём нажатия Ready...");
             await _lobbyView.ProcessLobbyAsync();
 
-            _lobby.CmdSetPlayerReady();
+            Debug.Log("[LobbyController] Отправляем Ready серверу");
+            NetworkClient.Send(new LobbyReadyMessage());
         }
 
-        private void OnReadyStatsChanged(int ready, int total)
+        private void OnStatusReceived(LobbyStatusMessage msg)
         {
-            Debug.Log($"[LobbyController] Готовы: {ready}/{total}");
-            _lobbyView.UpdateReadyCount(ready, total);
+            Debug.Log($"[LobbyController] Статус: {msg.ReadyCount}/{msg.TotalCount}");
+            _lobbyView.UpdateReadyCount(msg.ReadyCount, msg.TotalCount);
         }
 
-        private void OnAllPlayersReady()
+        private void OnStartGame(LobbyStartGameMessage msg)
         {
             if (!NetworkServer.active) return;
 
