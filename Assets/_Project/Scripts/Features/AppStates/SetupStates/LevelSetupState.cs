@@ -6,7 +6,7 @@ using _Project.Scripts.Infrastructure.StateMachine.State;
 using _Project.Scripts.Libs.Factories;
 using Cysharp.Threading.Tasks;
 using Unity.Cinemachine;
-using Unity.Netcode;
+using Mirror;
 using UnityEngine;
 
 namespace _Project.Scripts.Features.AppStates.SetupStates
@@ -29,22 +29,19 @@ namespace _Project.Scripts.Features.AppStates.SetupStates
 
         public override async UniTask OnEnter()
         {
-            Debug.Log("LevelSetupState Enter");
             await Setup();
-            
             StateMachine.RequestSwitchState<GameplayLoopState>();
         }
 
         public async UniTask Setup()
         {
-            if (NetworkManager.Singleton.IsServer)
+            if (NetworkServer.active)
             {
-                foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
+                foreach (var conn in NetworkServer.connections.Values)
                 {
                     var player = _factoryPlayer.Create();
                     player.transform.position = _spawnPoint.position;
-       
-                    player.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
+                    NetworkServer.AddPlayerForConnection(conn, player.gameObject);
                 }
             }
             

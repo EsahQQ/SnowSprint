@@ -2,13 +2,12 @@
 using _Project.Scripts.Bootstrap.InitPipeline.Queue;
 using _Project.Scripts.Bootstrap.InitPipeline.Tasks;
 using _Project.Scripts.Bootstrap.InitPipeline.Tasks.GlobalTasks;
-using _Project.Scripts.Features.Network;
-using _Project.Scripts.Features.Network.Auth;
-using _Project.Scripts.Features.Network.EmailVerif;
-using _Project.Scripts.Features.Player.Services;
+using _Project.Scripts.Features.Network.Lobby;
 using _Project.Scripts.Features.UI.Shop.Settings;
 using _Project.Scripts.Infrastructure.SceneManagement;
-using Unity.Netcode;
+using _Project.Scripts.Features.Network.Server.Email;
+using _Project.Scripts.Features.Network.Server.ServerDatabase;
+using Mirror;
 using UnityEngine;
 using Zenject;
 
@@ -17,30 +16,34 @@ namespace _Project.Scripts.Bootstrap.Installers
     public class ProjectInstaller : MonoInstaller
     {
         [SerializeField] private NetworkManager _networkManagerPrefab; 
+        [SerializeField] private LobbyNetworkManager _lobbyNetworkManagerPrefab;
         [SerializeField] private ShopDatabase _shopDatabase;
+        
         public override void InstallBindings()
         {
             Container.Bind<ISceneLoader>().To<SceneLoader>().AsSingle();
             BindInitPipeline();
             
-            var networkManagerInstance = Instantiate(_networkManagerPrefab, null, true);
-            DontDestroyOnLoad(networkManagerInstance.gameObject);
-            Container.Bind<NetworkManager>().FromInstance(networkManagerInstance).AsSingle();
+            Container.Bind<IServerDatabase>().To<LocalJsonDatabase>().AsSingle();
+            Container.Bind<IEmailService>().To<SmtpEmailService>().AsSingle();
             
-            Container.Bind<INetworkSessionService>().To<RelayNetworkSessionService>().AsSingle();
-            Container.Bind<IAuthService>().To<UnityAuthService>().AsSingle();
+            Container.Bind<NetworkManager>()
+                .FromComponentInNewPrefab(_networkManagerPrefab)
+                .AsSingle()
+                .NonLazy(); 
             
-            Container.Bind<IPlayerDataService>().To<CloudPlayerDataService>().AsSingle();
+            Container.Bind<LobbyNetworkManager>()
+                .FromComponentInNewPrefab(_lobbyNetworkManagerPrefab)
+                .AsSingle()
+                .NonLazy(); 
+            
             Container.Bind<ShopDatabase>().FromInstance(_shopDatabase).AsSingle();
-            
-            Container.Bind<IEmailVerificationService>().To<CloudEmailVerificationService>().AsSingle();
         }
 
         private void BindInitPipeline()
         {
             Container.Bind<IGlobalInitializer>().To<GlobalInitializer>().AsSingle();
             Container.Bind<IInitQueue>().To<InitQueue>().AsSingle();
-            
             Container.Bind<IInitTask>().To<GoodFpsTask>().AsSingle();
         }
     }

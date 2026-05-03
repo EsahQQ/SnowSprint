@@ -1,5 +1,5 @@
 ﻿using System;
-using _Project.Scripts.Features.Network.Auth;
+using _Project.Scripts.Features.Network.Server.Auth.Data;
 using _Project.Scripts.Features.UI.Menu.Panels;
 using DG.Tweening;
 using UnityEngine;

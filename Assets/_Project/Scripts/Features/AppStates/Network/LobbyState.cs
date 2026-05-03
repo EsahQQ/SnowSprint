@@ -1,10 +1,10 @@
-using _Project.Scripts.Features.Network;
+using _Project.Scripts.Features.Network.Lobby;
 using _Project.Scripts.Features.SceneConstants;
 using _Project.Scripts.Features.UI.Lobby;
 using _Project.Scripts.Infrastructure.StateMachine;
 using _Project.Scripts.Infrastructure.StateMachine.State;
 using Cysharp.Threading.Tasks;
-using Unity.Netcode;
+using Mirror; 
 
 namespace _Project.Scripts.Features.AppStates.Network
 {
@@ -24,13 +24,14 @@ namespace _Project.Scripts.Features.AppStates.Network
         {
             _lobbyNetworkManager.OnAllPlayersReady += StartGame;
             _lobbyNetworkManager.OnReadyStatsChanged += UpdateUI;
-           
-            UpdateUI(_lobbyNetworkManager.PlayersReadyCount.Value, _lobbyNetworkManager.TotalPlayersCount.Value);
+            
+            await UniTask.WaitUntil(() => NetworkClient.ready);
+            
+            UpdateUI(_lobbyNetworkManager.PlayersReadyCount, _lobbyNetworkManager.TotalPlayersCount);
 
             await _lobbyView.ProcessLobbyAsync();
             
-            if (_lobbyNetworkManager.IsSpawned)
-                _lobbyNetworkManager.SetPlayerReadyServerRpc();
+            _lobbyNetworkManager.CmdSetPlayerReady(); 
         }
 
         public override UniTask OnExit()
@@ -44,7 +45,7 @@ namespace _Project.Scripts.Features.AppStates.Network
 
         private void StartGame()
         {
-            if (NetworkManager.Singleton.IsServer)
+            if (NetworkServer.active)
                 StateMachine.RequestSwitchState<LoadSceneState, string>(SceneNames.Game);
         }
     }

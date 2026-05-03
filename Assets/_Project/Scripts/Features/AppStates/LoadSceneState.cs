@@ -3,8 +3,7 @@ using _Project.Scripts.Infrastructure.SceneManagement;
 using _Project.Scripts.Infrastructure.StateMachine;
 using _Project.Scripts.Infrastructure.StateMachine.State.Payload;
 using Cysharp.Threading.Tasks;
-using Unity.Netcode;
-using UnityEngine.SceneManagement;
+using Mirror;
 
 namespace _Project.Scripts.Features.AppStates
 {
@@ -17,11 +16,8 @@ namespace _Project.Scripts.Features.AppStates
         
         public override async UniTask OnEnter()
         {
-            var nm = NetworkManager.Singleton;
-            bool isNetworkActive = nm != null && (nm.IsServer || nm.IsClient);
-
-            if (isNetworkActive && Payload != SceneNames.MainMenu && nm.IsServer) 
-                nm.SceneManager.LoadScene(Payload, LoadSceneMode.Single);
+            if (NetworkServer.active && Payload != SceneNames.MainMenu) 
+                NetworkManager.singleton.ServerChangeScene(Payload);
             else
                 await _sceneLoader.Load(Payload);
         }

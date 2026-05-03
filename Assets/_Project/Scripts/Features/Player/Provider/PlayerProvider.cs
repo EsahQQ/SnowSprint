@@ -17,7 +17,7 @@ namespace _Project.Scripts.Features.Player.Provider
             _allPlayers.Add(player);
             OnAnyPlayerRegistered?.Invoke(player);
 
-            if (player.IsOwner)
+            if (player.isLocalPlayer)
             {
                 LocalPlayer = player;
                 OnLocalPlayerRegistered?.Invoke(player);

@@ -98,14 +98,12 @@ GameObject:
   - component: {fileID: 5710823586915906077}
   - component: {fileID: 874085991425652111}
   - component: {fileID: 3910399039846060154}
-  - component: {fileID: 8861909982968643303}
-  - component: {fileID: 39202030341881084}
-  - component: {fileID: -5143241321726993671}
   - component: {fileID: 7147003220609383991}
   - component: {fileID: 2166774247028371530}
   - component: {fileID: 1129771053046552589}
   - component: {fileID: 7437368269512421061}
   - component: {fileID: 2974210310714800656}
+  - component: {fileID: 902073103931635347}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -193,89 +191,6 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 1, y: 2}
   m_Direction: 0
---- !u!114 &8861909982968643303
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8651331337353559309}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2454840500
-  InScenePlacedSourceGlobalObjectIdHash: 0
-  DeferredDespawnTick: 0
-  Ownership: 1
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
-  SyncOwnerTransformWhenParented: 1
-  AllowOwnerToParent: 0
---- !u!114 &39202030341881084
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8651331337353559309}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  NetworkTransformExpanded: 0
-  AutoOwnerAuthorityTickOffset: 1
-  PositionInterpolationType: 0
-  RotationInterpolationType: 0
-  ScaleInterpolationType: 0
-  PositionLerpSmoothing: 1
-  PositionMaxInterpolationTime: 0.1
-  RotationLerpSmoothing: 1
-  RotationMaxInterpolationTime: 0.1
-  ScaleLerpSmoothing: 1
-  ScaleMaxInterpolationTime: 0.1
-  AuthorityMode: 0
-  TickSyncChildren: 0
-  UseUnreliableDeltas: 0
-  SyncPositionX: 1
-  SyncPositionY: 1
-  SyncPositionZ: 1
-  SyncRotAngleX: 1
-  SyncRotAngleY: 1
-  SyncRotAngleZ: 1
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
-  PositionThreshold: 0.001
-  RotAngleThreshold: 0.01
-  ScaleThreshold: 0.01
-  UseQuaternionSynchronization: 0
-  UseQuaternionCompression: 0
-  UseHalfFloatPrecision: 0
-  InLocalSpace: 0
-  SwitchTransformSpaceWhenParented: 0
-  Interpolate: 1
-  SlerpPosition: 0
---- !u!114 &-5143241321726993671
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8651331337353559309}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 820f4caf27ae4bf5a0a8d6594a062f73, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &7147003220609383991
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -288,17 +203,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96ce344959c6cd04daf657bf77a04ff9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  ShowTopMostFoldoutHeaderGroup: 1
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   _input: {fileID: 2974210310714800656}
   _physics: {fileID: 2166774247028371530}
   _stats: {fileID: 1129771053046552589}
   _visuals: {fileID: 7437368269512421061}
   _rb: {fileID: 874085991425652111}
-  IsRaceActive:
-    UpdateTraits:
-      MinSecondsBetweenUpdates: 0
-      MaxSecondsBetweenUpdates: 0
-    m_InternalValue: 0
+  IsRaceActive: 0
 --- !u!114 &2166774247028371530
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -350,3 +263,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _minSwipeLength: 25
+--- !u!114 &902073103931635347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8651331337353559309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 3183254787
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0

@@ -6,6 +6,7 @@ using _Project.Scripts.Features.UI.HUD;
 using _Project.Scripts.Infrastructure.StateMachine;
 using _Project.Scripts.Infrastructure.StateMachine.State;
 using Cysharp.Threading.Tasks;
+using Mirror;
 
 namespace _Project.Scripts.Features.AppStates.Gameplay
 {
@@ -39,6 +40,7 @@ namespace _Project.Scripts.Features.AppStates.Gameplay
             
             return UniTask.CompletedTask;
         }
+        
         private async UniTaskVoid WaitAndInitProgress()
         {
             await UniTask.WaitUntil(() => _playerProvider.LocalPlayer != null);
@@ -49,7 +51,7 @@ namespace _Project.Scripts.Features.AppStates.Gameplay
         {
             player.Initialize();
             
-            if (Unity.Netcode.NetworkManager.Singleton.IsServer)
+            if (NetworkServer.active)
                 player.SetActive(true);
         }
 
@@ -72,7 +74,7 @@ namespace _Project.Scripts.Features.AppStates.Gameplay
             _finishTrigger.OnPlayerFinished -= OnLevelFinished;
             _playerProvider.OnAnyPlayerRegistered -= InitializeAndActivatePlayer; 
             
-            if (Unity.Netcode.NetworkManager.Singleton.IsServer)
+            if (NetworkServer.active)
                 foreach (var player in _playerProvider.AllPlayers)
                     player.SetActive(false);
 

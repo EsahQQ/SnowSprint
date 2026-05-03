@@ -1,6 +1,6 @@
-using Unity.Netcode;
 using _Project.Scripts.Features.Player.PlayerInput;
 using _Project.Scripts.Features.Player.Provider;
+using Mirror;
 using UnityEngine;
 using Zenject;
 
@@ -16,7 +16,7 @@ namespace _Project.Scripts.Features.Player
 
         private IPlayerProvider _playerProvider;
         
-        public NetworkVariable<bool> IsRaceActive = new NetworkVariable<bool>();
+        [SyncVar] public bool IsRaceActive;
         
         private float _serverMaxSpeed;
         private float _serverAcceleration;
@@ -25,26 +25,29 @@ namespace _Project.Scripts.Features.Player
 
         [Inject]
         public void Construct(IPlayerProvider playerProvider) => _playerProvider = playerProvider;
-
-        public override void OnNetworkSpawn()
+        
+        public override void OnStartClient()
         {
             _playerProvider.RegisterPlayer(this);
-            
-            _rb.bodyType = IsServer ? RigidbodyType2D.Dynamic : RigidbodyType2D.Kinematic;
             _rb.simulated = true;
-
-            if (IsOwner)
-            {
-                _stats.Initialize();
-                SubmitStatsServerRpc(
-                    _stats.CurrentMaxSpeed, 
-                    _stats.CurrentAcceleration, 
-                    _stats.CurrentBoostForce, 
-                    _stats.CurrentJumpForce);
-            }
+        }
+        
+        public override void OnStartServer()
+        {
+            _rb.bodyType = RigidbodyType2D.Dynamic;
         }
 
-        public override void OnNetworkDespawn() => _playerProvider?.UnregisterPlayer(this);
+        public override void OnStartLocalPlayer()
+        {
+            _stats.Initialize();
+            CmdSubmitStats(
+                _stats.CurrentMaxSpeed, 
+                _stats.CurrentAcceleration, 
+                _stats.CurrentBoostForce, 
+                _stats.CurrentJumpForce);
+        }
+
+        public override void OnStopClient() => _playerProvider?.UnregisterPlayer(this);
 
         public void Initialize()
         {
@@ -54,25 +57,25 @@ namespace _Project.Scripts.Features.Player
         
         public void Tick()
         {
-            if (!IsRaceActive.Value) return;
+            if (!IsRaceActive) return;
             
-            if (IsOwner)
+            if (isLocalPlayer)
             {
                 _input.Tick();
             
                 if (_input.GetJumpInput()) 
-                    RequestJumpServerRpc();
+                    CmdRequestJump();
             
                 if (_input.GetBoostInput())
-                    RequestBoostServerRpc();
+                    CmdRequestBoost();
             }
         }
         
         public void FixedTick(float fixedDt)
         {
-            if (!IsRaceActive.Value) return;
+            if (!IsRaceActive) return;
             
-            if (IsServer)
+            if (isServer)
                 _physics.FixedTick(_serverMaxSpeed, _serverAcceleration);
             
             _physics.CheckGround(); 
@@ -81,17 +84,17 @@ namespace _Project.Scripts.Features.Player
 
         public void SetActive(bool isActive)
         {
-            if (IsServer)
+            if (isServer)
             {
-                IsRaceActive.Value = isActive;
+                IsRaceActive = isActive;
                 _physics.ResetVelocity();
             }
         }
 
-        #region Server RPCs
+        #region Commands (Вызовы от Клиента к Серверу)
 
-        [ServerRpc(RequireOwnership = true)]
-        private void SubmitStatsServerRpc(float maxSpeed, float acceleration, float boost, float jump)
+        [Command]
+        private void CmdSubmitStats(float maxSpeed, float acceleration, float boost, float jump)
         {
             _serverMaxSpeed = maxSpeed;
             _serverAcceleration = acceleration;
@@ -99,17 +102,17 @@ namespace _Project.Scripts.Features.Player
             _serverJumpForce = jump;
         }
 
-        [ServerRpc(RequireOwnership = true)]
-        private void RequestJumpServerRpc()
+        [Command]
+        private void CmdRequestJump()
         {
-            if (!IsRaceActive.Value) return;
+            if (!IsRaceActive) return;
             _physics.Jump(_serverJumpForce);
         }
 
-        [ServerRpc(RequireOwnership = true)]
-        private void RequestBoostServerRpc()
+        [Command]
+        private void CmdRequestBoost()
         {
-            if (!IsRaceActive.Value) return;
+            if (!IsRaceActive) return;
             _physics.Boost(_serverBoostForce);
         }
 

@@ -1,6 +1,5 @@
 using System;
-using _Project.Scripts.Features.Network.Auth;
-using Cysharp.Threading.Tasks;
+using _Project.Scripts.Features.Network.Server.Auth.Data;
 
 namespace _Project.Scripts.Features.UI.Menu
 {

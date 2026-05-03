@@ -1,7 +1,7 @@
 ﻿using _Project.Scripts.Bootstrap.EntryPoint;
 using _Project.Scripts.Bootstrap.InitPipeline.Initializers.Scene;
 using _Project.Scripts.Features.AppStates;
-using _Project.Scripts.Features.Network.Auth;
+using _Project.Scripts.Features.Network.Server.Auth;
 using _Project.Scripts.Features.UI.Menu;
 using UnityEngine;
 using Zenject;
@@ -19,7 +19,7 @@ namespace _Project.Scripts.Bootstrap.Installers.Scenes
 
             Container.Bind<IMainMenuView>().FromInstance(_mainMenuView).AsSingle();
             
-            Container.Bind<AuthFlowController>().AsSingle();
+            Container.BindInterfacesAndSelfTo<ClientAuthController>().AsSingle();
         }
     }
 }
