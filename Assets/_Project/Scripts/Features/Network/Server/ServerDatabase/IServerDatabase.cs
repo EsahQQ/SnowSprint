@@ -8,5 +8,10 @@ namespace _Project.Scripts.Features.Network.Server.ServerDatabase
         string CreateUserAndGetCode(string email, string username, string password);
         bool TryVerify(string email, string code);
         UserData TryLogin(string email, string password);
+        
+        UserData GetUserByEmail(string email);
+        void UpdateCoins(string email, int newAmount);
+        void AddUserUpgrade(string email, string upgradeId);
+        bool IsUpgradeOwned(string email, string upgradeId);
     }
 }

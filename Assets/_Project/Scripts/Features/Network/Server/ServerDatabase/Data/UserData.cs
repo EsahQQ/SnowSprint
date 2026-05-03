@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace _Project.Scripts.Features.Network.Server.ServerDatabase.Data
 {
@@ -11,5 +12,6 @@ namespace _Project.Scripts.Features.Network.Server.ServerDatabase.Data
         public string VerificationCode;
         public bool IsActivated;
         public int Coins;
+        public List<string> UnlockedUpgrades = new();
     }
 }

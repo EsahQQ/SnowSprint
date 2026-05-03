@@ -14,13 +14,18 @@ namespace _Project.Scripts.Features.Installers
         [SerializeField] private FinishTrigger _finishTrigger;
         [SerializeField] private PlayerSettings _playerSettings;
         [SerializeField] private TextMeshProUGUI _progressText;
-        
+
         public override void InstallBindings()
         {
             Container.Bind<PlayerSettings>().FromInstance(_playerSettings).AsSingle();
-            Container.Bind<FinishTrigger>().FromComponentInHierarchy(_finishTrigger).AsSingle();
             
-            Container.Bind<TextMeshProUGUI>().FromComponentInHierarchy(_progressText).AsSingle().WhenInjectedInto<LevelProgressView>();
+            Container.Bind<FinishTrigger>().FromInstance(_finishTrigger).AsSingle();
+
+            Container.Bind<TextMeshProUGUI>()
+                .FromInstance(_progressText)
+                .AsSingle()
+                .WhenInjectedInto<LevelProgressView>();
+
             Container.Bind<LevelProgressView>().AsSingle();
         }
     }

@@ -27,7 +27,11 @@ namespace _Project.Scripts.Features.UI.Lobby
             await _playCompletionSource.Task;
         }
 
-        public void UpdateReadyCount(int readyCount, int totalCount) => _readyStatusText.text = $"{readyCount} / {totalCount}";
+        public void UpdateReadyCount(int readyCount, int totalCount)
+        {
+            Debug.Log($"[UI] Обновление текста лобби: {readyCount} / {totalCount}");
+            _readyStatusText.text = $"{readyCount} / {totalCount}";
+        }
         public void SetInteractable(bool isInteractable) => _readyButton.interactable = isInteractable;
     }
 }

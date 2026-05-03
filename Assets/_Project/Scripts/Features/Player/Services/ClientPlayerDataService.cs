@@ -20,14 +20,12 @@ namespace _Project.Scripts.Features.Player.Services
 
         public void Initialize()
         {
-            if (NetworkClient.active)
-                NetworkClient.RegisterHandler<ProfileDataResponse>(OnProfileDataReceived, false);
+            NetworkClient.RegisterHandler<ProfileDataResponse>(OnProfileDataReceived, false);
         }
 
         public void Dispose()
         {
-            if (NetworkClient.active)
-                NetworkClient.UnregisterHandler<ProfileDataResponse>();
+            NetworkClient.UnregisterHandler<ProfileDataResponse>();
         }
         
         public async UniTask LoadProfileFromCloudAsync()

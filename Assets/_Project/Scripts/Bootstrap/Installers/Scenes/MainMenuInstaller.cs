@@ -1,7 +1,4 @@
-﻿using _Project.Scripts.Bootstrap.EntryPoint;
-using _Project.Scripts.Features.AppStates;
-using _Project.Scripts.Features.Network.Server.Auth;
-using _Project.Scripts.Features.Network.Server.Auth.Controller;
+﻿using _Project.Scripts.Features.Network.Server.Auth.Controller;
 using _Project.Scripts.Features.UI.Menu;
 using UnityEngine;
 using Zenject;
@@ -14,8 +11,6 @@ namespace _Project.Scripts.Bootstrap.Installers.Scenes
 
         public override void InstallBindings()
         {
-            Container.BindInterfacesAndSelfTo<SceneEntryPoint<MainMenuState>>().AsSingle();
-
             Container.Bind<IMainMenuView>().FromInstance(_mainMenuView).AsSingle();
             
             Container.BindInterfacesAndSelfTo<ClientAuthController>().AsSingle();

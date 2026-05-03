@@ -7,72 +7,83 @@ namespace _Project.Scripts.Features.Network.Lobby
 {
     public class LobbyNetworkManager : NetworkBehaviour
     {
-        [SyncVar(hook = nameof(OnStatsHook))]
+        public static LobbyNetworkManager Singleton { get; private set; }
+
+        public override void OnStartServer()
+        {
+            Singleton = this;
+        }
+
+        private void Awake()
+        {
+            Debug.Log($"[LNM] Awake. isServer={isServer} isClient={isClient}");
+        }
+
+        public override void OnStartClient()
+        {
+            Debug.Log($"[LNM] OnStartClient. netId={netId}");
+            Singleton = this;
+        }
+
+        public override void OnStopClient()
+        {
+            if (Singleton == this) Singleton = null;
+        }
+
+        public override void OnStopServer()
+        {
+            if (Singleton == this) Singleton = null;
+        }
+
+        [SyncVar(hook = nameof(OnStatsChanged))]
         public int PlayersReadyCount;
 
-        [SyncVar(hook = nameof(OnStatsHook))]
+        [SyncVar(hook = nameof(OnStatsChanged))]
         public int TotalPlayersCount;
 
         public event Action<int, int> OnReadyStatsChanged;
         public event Action OnAllPlayersReady;
-        
-        private readonly HashSet<NetworkConnection> _readyClients = new();
 
-        public override void OnStartClient() => OnReadyStatsChanged?.Invoke(PlayersReadyCount, TotalPlayersCount);
-        public override void OnStartServer()
-        {
-            base.OnStartServer();
-            UpdateTotalPlayers();
-        }
-        private void OnStatsHook(int oldValue, int newValue) => OnReadyStatsChanged?.Invoke(PlayersReadyCount, TotalPlayersCount);
-        
-        [ServerCallback]
-        private void UpdateTotalPlayers()
-        {
-            int count = 0;
-            foreach (var conn in NetworkServer.connections.Values)
-                if (conn != null) count++;
-            
-            TotalPlayersCount = count;
-        }
-        
+        private readonly HashSet<int> _readyClients = new();
+
         [Command(requiresAuthority = false)]
         public void CmdSetPlayerReady(NetworkConnectionToClient sender = null)
         {
             if (sender == null) return;
 
-            if (_readyClients.Add(sender))
+            if (_readyClients.Add(sender.connectionId))
             {
                 PlayersReadyCount = _readyClients.Count;
-                TotalPlayersCount = NetworkServer.connections.Count;
-                CheckStartGame();
+                UpdateTotalPlayers();
             }
         }
 
         [ServerCallback]
         private void Update()
         {
-            if (_readyClients.RemoveWhere(conn => conn == null || !conn.isReady) > 0)
-                PlayersReadyCount = _readyClients.Count;
-            
-            if (TotalPlayersCount != NetworkServer.connections.Count)
-            {
-                TotalPlayersCount = NetworkServer.connections.Count;
-                CheckStartGame();
-            }
+            if (NetworkServer.connections.Count != TotalPlayersCount)
+                UpdateTotalPlayers();
+        }
+
+        [ServerCallback]
+        private void UpdateTotalPlayers()
+        {
+            TotalPlayersCount = NetworkServer.connections.Count;
+            CheckAllReady();
+        }
+
+        private void OnStatsChanged(int _, int __)
+        {
+            Debug.Log($"[Lobby] SyncVar → {PlayersReadyCount}/{TotalPlayersCount}");
+            OnReadyStatsChanged?.Invoke(PlayersReadyCount, TotalPlayersCount);
         }
 
         [Server]
-        private void CheckStartGame()
+        private void CheckAllReady()
         {
-            /*if (TotalPlayersCount == 0) return;
-
-            if (PlayersReadyCount == TotalPlayersCount)
-                OnAllPlayersReady?.Invoke();*/
-            
             if (TotalPlayersCount > 0 && PlayersReadyCount >= TotalPlayersCount)
             {
-                Debug.Log("[Server] Все готовы! Запуск игры...");
+                Debug.Log("[Lobby] Все готовы! Уведомляем подписчиков...");
                 OnAllPlayersReady?.Invoke();
             }
         }

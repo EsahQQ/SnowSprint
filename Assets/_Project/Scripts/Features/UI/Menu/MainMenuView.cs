@@ -161,5 +161,14 @@ namespace _Project.Scripts.Features.UI.Menu
             UnityEditor.EditorApplication.isPlaying = false;
 #endif
         }
+        
+        private void OnDestroy()
+        {
+            _menuGroup.DOKill();
+            _settingsGroup.DOKill();
+            _loginGroup.DOKill();
+            _registerGroup.DOKill();
+            _verifyGroup.DOKill();
+        }
     }
 }
