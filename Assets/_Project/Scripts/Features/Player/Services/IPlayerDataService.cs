@@ -11,7 +11,6 @@ namespace _Project.Scripts.Features.Player.Services
         void AddCoins(int amount);
         bool TrySpendCoins(int amount);
         bool IsUpgradeBought(string upgradeId);
-        void UnlockUpgrade(string upgradeId);
         event Action<int> OnCoinsChanged; 
         bool TryBuyUpgrade(ShopItemConfig item);
     }

@@ -4,6 +4,7 @@ using _Project.Scripts.Bootstrap.InitPipeline.Tasks;
 using _Project.Scripts.Bootstrap.InitPipeline.Tasks.GlobalTasks;
 using _Project.Scripts.Features.Network;
 using _Project.Scripts.Features.Network.Auth;
+using _Project.Scripts.Features.Network.EmailVerif;
 using _Project.Scripts.Features.Player.Services;
 using _Project.Scripts.Features.UI.Shop.Settings;
 using _Project.Scripts.Infrastructure.SceneManagement;
@@ -31,6 +32,8 @@ namespace _Project.Scripts.Bootstrap.Installers
             
             Container.Bind<IPlayerDataService>().To<CloudPlayerDataService>().AsSingle();
             Container.Bind<ShopDatabase>().FromInstance(_shopDatabase).AsSingle();
+            
+            Container.Bind<IEmailVerificationService>().To<CloudEmailVerificationService>().AsSingle();
         }
 
         private void BindInitPipeline()

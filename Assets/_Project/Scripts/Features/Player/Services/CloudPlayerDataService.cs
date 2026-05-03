@@ -10,89 +10,94 @@ namespace _Project.Scripts.Features.Player.Services
     public class CloudPlayerDataService : IPlayerDataService
     {
         private const string CoinsKey = "PLAYER_COINS";
+        private const string UpgradeKeyPrefix = "UPGRADE_";
 
-        private readonly Dictionary<string, int> _cloudDataCache = new();
+        private readonly Dictionary<string, int> _cache = new();
 
         public event Action<int> OnCoinsChanged;
 
-        public int Coins => GetInt(CoinsKey, 0);
+        public int Coins => GetCached(CoinsKey, defaultValue: 0);
 
         public async UniTask LoadProfileFromCloudAsync()
         {
-            _cloudDataCache.Clear();
+            _cache.Clear();
             try
             {
                 var cloudData = await CloudSaveService.Instance.Data.Player.LoadAllAsync();
-                
+
                 foreach (var item in cloudData)
                 {
-                    _cloudDataCache[item.Key] = item.Value.Value.GetAs<int>();
+                    try
+                    {
+                        _cache[item.Key] = item.Value.Value.GetAs<int>();
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
                 }
-                
-                Debug.Log($"[CloudSave] Профиль загружен! Монет: {Coins}");
-                OnCoinsChanged?.Invoke(Coins); 
+
+                Debug.Log($"[CloudSave] Profile loaded. Coins: {Coins}");
+                OnCoinsChanged?.Invoke(Coins);
             }
             catch (Exception e)
             {
-                Debug.LogError($"[CloudSave] Ошибка загрузки профиля: {e.Message}");
+                Debug.LogError($"[CloudSave] Load failed: {e.Message}");
             }
         }
 
         public void AddCoins(int amount)
         {
-            SetInt(CoinsKey, Coins + amount);
+            SetCached(CoinsKey, Coins + amount);
             OnCoinsChanged?.Invoke(Coins);
         }
 
         public bool TrySpendCoins(int amount)
         {
-            if (Coins < amount) 
-                return false;
-            
-            SetInt(CoinsKey, Coins - amount);
+            if (Coins < amount) return false;
+
+            SetCached(CoinsKey, Coins - amount);
             OnCoinsChanged?.Invoke(Coins);
             return true;
         }
 
-        public bool IsUpgradeBought(string upgradeId) => GetInt($"UPGRADE_{upgradeId}", 0) == 1;
-
-        public void UnlockUpgrade(string upgradeId)
-        {
-            SetInt($"UPGRADE_{upgradeId}", 1);
-            Debug.Log($"[CloudSave] Апгрейд {upgradeId} куплен и сохранен в облако!");
-        }
+        public bool IsUpgradeBought(string upgradeId) =>
+            GetCached(UpgradeKeyPrefix + upgradeId, defaultValue: 0) == 1;
 
         public bool TryBuyUpgrade(ShopItemConfig item)
         {
             if (IsUpgradeBought(item.ID)) return false;
             if (!TrySpendCoins(item.Price)) return false;
-            
+
             UnlockUpgrade(item.ID);
             return true;
         }
 
-        private int GetInt(string key, int defaultValue)
+        private void UnlockUpgrade(string upgradeId)
         {
-            return _cloudDataCache.TryGetValue(key, out var val) ? val : defaultValue;
+            SetCached(UpgradeKeyPrefix + upgradeId, 1);
+            Debug.Log($"[CloudSave] Upgrade '{upgradeId}' unlocked.");
         }
+        
+        private int GetCached(string key, int defaultValue) =>
+            _cache.TryGetValue(key, out int val) ? val : defaultValue;
 
-        private void SetInt(string key, int value)
+        private void SetCached(string key, int value)
         {
-            _cloudDataCache[key] = value;
-            
-            SaveToCloudAsync(key, value).Forget(); 
+            _cache[key] = value;
+            SaveToCloudAsync(key, value).Forget();
         }
 
         private async UniTaskVoid SaveToCloudAsync(string key, int value)
         {
             try
             {
-                var data = new Dictionary<string, object> { { key, value } };
-                await CloudSaveService.Instance.Data.Player.SaveAsync(data);
+                await CloudSaveService.Instance.Data.Player.SaveAsync(
+                    new Dictionary<string, object> { { key, value } });
             }
             catch (Exception e)
             {
-                Debug.LogError($"[CloudSave] Ошибка сохранения {key}: {e.Message}");
+                Debug.LogError($"[CloudSave] Save failed for '{key}': {e.Message}");
             }
         }
     }

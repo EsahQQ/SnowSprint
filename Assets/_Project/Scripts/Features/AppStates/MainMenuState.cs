@@ -1,97 +1,66 @@
 ﻿using _Project.Scripts.Features.Network;
 using _Project.Scripts.Features.Network.Auth;
+using _Project.Scripts.Features.Player.Services;
 using _Project.Scripts.Features.SceneConstants;
-using _Project.Scripts.Features.UI;
-using _Project.Scripts.Features.Player.Services; 
+using _Project.Scripts.Features.UI.Menu;
 using _Project.Scripts.Infrastructure.StateMachine;
 using _Project.Scripts.Infrastructure.StateMachine.State;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 
 namespace _Project.Scripts.Features.AppStates
 {
     public class MainMenuState : BaseState
     {
-        private readonly IMainMenuView _mainMenuView;
+        private readonly IMainMenuView _view;
         private readonly INetworkSessionService _networkSession;
         private readonly IAuthService _authService;
-
         private readonly IPlayerDataService _playerDataService;
+        private readonly AuthFlowController _authFlowController;
 
-        public MainMenuState(
-            IStateMachine stateMachine, 
-            IMainMenuView mainMenuView, 
-            INetworkSessionService networkSession, 
-            IAuthService authService,
-            IPlayerDataService playerDataService) : base(stateMachine)
+        public MainMenuState(IStateMachine stateMachine, IMainMenuView view, INetworkSessionService networkSession,
+            IAuthService authService, IPlayerDataService playerDataService, AuthFlowController authFlowController) : base(stateMachine)
         {
-            _mainMenuView = mainMenuView;
+            _view = view;
             _networkSession = networkSession;
             _authService = authService;
             _playerDataService = playerDataService;
+            _authFlowController = authFlowController;
         }
-        
+
         public override async UniTask OnEnter()
         {
-            Debug.Log("MainMenuState Enter");
+            _view.OnLogoutClicked += HandleLogout;
+            _view.OnPlayClicked += HandlePlayClicked;
 
             await _authService.InitializeAsync();
-            _mainMenuView.OnLogoutClicked += HandleLogout;
             RefreshProfileUI();
-            
-            if (_authService.IsSignedIn) await _playerDataService.LoadProfileFromCloudAsync();
 
-            while (true)
-            {
-                await _mainMenuView.ProcessMenuAsync(); 
-
-                if (!_authService.IsSignedIn)
-                {
-                    bool authSuccess = await HandleAuthenticationFlowAsync();
-                    if (!authSuccess) continue; 
-
-                    await _playerDataService.LoadProfileFromCloudAsync();
-                }
-
-                break;
-            }
-
-            await _networkSession.QuickJoinOrCreateAsync();
-            StateMachine.RequestSwitchState<LoadSceneState, string>(SceneNames.LobbyMenu);
+            if (_authService.IsLoggedInAsUser)
+                await _playerDataService.LoadProfileFromCloudAsync();
         }
 
         public override UniTask OnExit()
         {
-            _mainMenuView.OnLogoutClicked -= HandleLogout;
+            _view.OnLogoutClicked -= HandleLogout;
+            _view.OnPlayClicked -= HandlePlayClicked;
             return UniTask.CompletedTask;
         }
 
-        private async UniTask<bool> HandleAuthenticationFlowAsync()
+        private async void HandlePlayClicked()
         {
-            _mainMenuView.ShowAuthPanel(true);
-
-            while (true)
+            if (_authService.IsLoggedInAsUser)
             {
-                var authData = await _mainMenuView.WaitForAuthInputAsync();
+                await _networkSession.QuickJoinOrCreateAsync();
+                StateMachine.RequestSwitchState<LoadSceneState, string>(SceneNames.LobbyMenu);
+                return;
+            }
 
-                if (authData.isCanceled)
-                {
-                    _mainMenuView.ShowAuthPanel(false);
-                    return false; 
-                }
-                
-                bool success = authData.isLogin
-                    ? await _authService.SignInAsync(authData.username, authData.password)
-                    : await _authService.SignUpAsync(authData.username, authData.password);
-
-                if (success)
-                {
-                    _mainMenuView.ShowAuthPanel(false);
-                    RefreshProfileUI();
-                    return true;
-                }
-
-                Debug.LogWarning("[Auth] Неверный логин или пароль");
+            bool authSuccess = await _authFlowController.RunAsync();
+            
+            if (authSuccess)
+            {
+                RefreshProfileUI();
+                await _playerDataService.LoadProfileFromCloudAsync();
             }
         }
 
@@ -101,6 +70,7 @@ namespace _Project.Scripts.Features.AppStates
             RefreshProfileUI();
         }
 
-        private void RefreshProfileUI() => _mainMenuView.UpdateProfileUI(_authService.IsSignedIn, _authService.PlayerName);
+        private void RefreshProfileUI() =>
+            _view.UpdateProfileUI(_authService.IsLoggedInAsUser, _authService.PlayerName);
     }
 }

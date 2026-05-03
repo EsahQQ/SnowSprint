@@ -1,16 +1,19 @@
+using System;
+using _Project.Scripts.Features.Network.Auth;
 using Cysharp.Threading.Tasks;
 
-namespace _Project.Scripts.Features.UI
+namespace _Project.Scripts.Features.UI.Menu
 {
     public interface IMainMenuView
     {
-        UniTask ProcessMenuAsync();
-        
-        void UpdateProfileUI(bool isSignedIn, string playerName);
-        void ShowAuthPanel(bool show);
-        
-        UniTask<(bool isLogin, bool isCanceled, string username, string password)> WaitForAuthInputAsync();
-        
-        event System.Action OnLogoutClicked;
+        event Action OnPlayClicked;
+        event Action OnLogoutClicked;
+        public event Action<AuthData> OnAuthActionSubmitted;
+
+        void UpdateProfileUI(bool isLoggedIn, string playerName);
+        void ShowLoginPanel(bool show);
+        void ShowRegisterPanel(bool show);
+        void ShowVerifyPanel(bool show);
+        void SwitchBetweenAuthPanels(AuthAction action);
     }
 }

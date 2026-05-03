@@ -1,142 +1,165 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System;
+using _Project.Scripts.Features.Network.Auth;
+using _Project.Scripts.Features.UI.Menu.Panels;
 using DG.Tweening;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace _Project.Scripts.Features.UI
+namespace _Project.Scripts.Features.UI.Menu
 {
     public class MainMenuView : MonoBehaviour, IMainMenuView
     {
-        [Header("Panels")]
+        [Header("Canvas Groups")]
         [SerializeField] private CanvasGroup _menuGroup;
         [SerializeField] private CanvasGroup _settingsGroup;
-        [SerializeField] private CanvasGroup _authGroup;
+        [SerializeField] private CanvasGroup _loginGroup;
+        [SerializeField] private CanvasGroup _registerGroup;
+        [SerializeField] private CanvasGroup _verifyGroup;
 
         [Header("Menu Buttons")]
         [SerializeField] private Button _playButton;
         [SerializeField] private Button _settingsButton;
         [SerializeField] private Button _exitButton;
-        [SerializeField] private Button _backFromSettingsButton; 
-        
-        [Header("Profile UI (on Menu Panel)")]
-        [SerializeField] private GameObject _profilePanel;
-        [SerializeField] private TextMeshProUGUI _usernameText;
-        [SerializeField] private Button _logoutButton;
+        [SerializeField] private Button _backFromSettingsButton;
 
-        [Header("Auth Panel Elements")]
-        [SerializeField] private TMP_InputField _usernameInput;
-        [SerializeField] private TMP_InputField _passwordInput;
-        [SerializeField] private Button _loginSubmitButton;
-        [SerializeField] private Button _registerSubmitButton;
-        [SerializeField] private Button _backFromAuthButton;
+        [Header("Sub-Panels")]
+        [SerializeField] private ProfilePanel _profile;
+        [SerializeField] private AuthLoginPanel _login;
+        [SerializeField] private AuthRegisterPanel _register;
+        [SerializeField] private AuthVerifyPanel _verify;
 
         [Header("Settings")]
         [SerializeField] private float _fadeDuration = 0.4f;
-
-        private UniTaskCompletionSource _playCompletionSource;
-        private UniTaskCompletionSource<(bool, bool, string, string)> _authCompletionSource;
-
-        public event System.Action OnLogoutClicked;
+        
+        public event Action OnPlayClicked;
+        public event Action OnLogoutClicked;
+        public event Action<AuthData> OnAuthActionSubmitted;
 
         private void Start()
         {
-            _playButton.onClick.AddListener(PlayGame);
+            BindMenuButtons();
+            BindAuthButtons();
+            ResetAllPanels();
+        }
+
+        public void UpdateProfileUI(bool isLoggedIn, string playerName)
+        {
+            _profile.Root.SetActive(isLoggedIn);
+            if (isLoggedIn)
+                _profile.UsernameText.text = $"Привет, {playerName}!";
+        }
+
+        public void ShowLoginPanel(bool show) => SwitchPanels(show ? _menuGroup : _loginGroup, show ? _loginGroup : _menuGroup);
+        public void ShowRegisterPanel(bool show) => SwitchPanels(show ? _menuGroup : _registerGroup, show ? _registerGroup : _menuGroup);
+
+        public void ShowVerifyPanel(bool show)
+        {
+            if (show) _verify.CodeInput.text = string.Empty;
+            SwitchPanels(show ? _menuGroup : _verifyGroup, show ? _verifyGroup : _menuGroup);
+        }
+
+        public void SwitchBetweenAuthPanels(AuthAction action)
+        {
+            switch (action)
+            {
+                case AuthAction.GoToRegister: SwitchPanels(_loginGroup, _registerGroup); break;
+                case AuthAction.GoToLogin: SwitchPanels(_registerGroup, _loginGroup); break;
+                case AuthAction.TryRegister:
+                    _verify.CodeInput.text = string.Empty;
+                    SwitchPanels(_registerGroup, _verifyGroup);
+                    break;
+            }
+        }
+        
+        private void BindMenuButtons()
+        {
+            _playButton.onClick.AddListener(() => OnPlayClicked?.Invoke());
             _exitButton.onClick.AddListener(QuitGame);
             _settingsButton.onClick.AddListener(() => SwitchPanels(_menuGroup, _settingsGroup));
             _backFromSettingsButton.onClick.AddListener(() => SwitchPanels(_settingsGroup, _menuGroup));
-  
-            _logoutButton.onClick.AddListener(() => OnLogoutClicked?.Invoke());
-
-            _backFromAuthButton.onClick.AddListener(CancelAuth);
-            _loginSubmitButton.onClick.AddListener(() => SubmitAuth(true));
-            _registerSubmitButton.onClick.AddListener(() => SubmitAuth(false));
-
-            ResetState();
+            _profile.LogoutButton.onClick.AddListener(() => OnLogoutClicked?.Invoke());
         }
 
-        public async UniTask ProcessMenuAsync()
+        private void BindAuthButtons()
         {
-            _playCompletionSource = new UniTaskCompletionSource();
-            await _playCompletionSource.Task;
-        }
-        
-        public void UpdateProfileUI(bool isSignedIn, string playerName)
-        {
-            _profilePanel.SetActive(isSignedIn);
-            if (isSignedIn)
-                _usernameText.text = $"Привет, {playerName}!";
+            _login.SubmitButton.onClick.AddListener(() => SubmitAuth(AuthAction.TryLogin));
+            _login.GoToRegisterButton.onClick.AddListener(() => SubmitAuth(AuthAction.GoToRegister));
+            _login.CloseButton.onClick.AddListener(() => SubmitAuth(AuthAction.Cancel));
+
+            _register.SubmitButton.onClick.AddListener(() => SubmitAuth(AuthAction.TryRegister));
+            _register.GoToLoginButton.onClick.AddListener(() => SubmitAuth(AuthAction.GoToLogin));
+            _register.CloseButton.onClick.AddListener(() => SubmitAuth(AuthAction.Cancel));
+
+            _verify.SubmitButton.onClick.AddListener(() => SubmitAuth(AuthAction.SubmitCode));
+            _verify.CancelButton.onClick.AddListener(() => SubmitAuth(AuthAction.Cancel));
         }
         
-        public void ShowAuthPanel(bool show)
+        private void SubmitAuth(AuthAction action)
         {
-            if (show)
+            var data = new AuthData { Action = action };
+
+            switch (action)
             {
-                _usernameInput.text = "";
-                _passwordInput.text = "";
-                SwitchPanels(_menuGroup, _authGroup);
-            }
-            else
-            {
-                SwitchPanels(_authGroup, _menuGroup);
-            }
-        }
-
-        public async UniTask<(bool isLogin, bool isCanceled, string username, string password)> WaitForAuthInputAsync()
-        {
-            _authCompletionSource = new UniTaskCompletionSource<(bool, bool, string, string)>();
-            return await _authCompletionSource.Task;
-        }
-
-        private void SubmitAuth(bool isLogin)
-        {
-            if (string.IsNullOrEmpty(_usernameInput.text) || string.IsNullOrEmpty(_passwordInput.text))
-                return; 
-
-            _authCompletionSource?.TrySetResult((isLogin, false, _usernameInput.text, _passwordInput.text));
-        }
-
-        private void CancelAuth() => _authCompletionSource?.TrySetResult((false, true, "", ""));
-
-        private void PlayGame() => _playCompletionSource?.TrySetResult();
-
-        private void ResetState()
-        {
-            _menuGroup.alpha = 1;
-            _menuGroup.blocksRaycasts = true;
-            _menuGroup.interactable = true;
-
-            _settingsGroup.alpha = 0;
-            _settingsGroup.blocksRaycasts = false;
-            _settingsGroup.interactable = false;
+                case AuthAction.TryLogin:
+                    data.Username = _login.UsernameInput.text; 
+                    data.Email = _login.UsernameInput.text; 
+                    data.Password = _login.PasswordInput.text;
+                    break;
             
-            _authGroup.alpha = 0;
-            _authGroup.blocksRaycasts = false;
-            _authGroup.interactable = false;
+                case AuthAction.TryRegister:
+                    data.Username = _register.UsernameInput.text;
+                    data.Email = _register.EmailInput.text;
+                    data.Password = _register.PasswordInput.text;
+                    break;
+            
+                case AuthAction.SubmitCode:
+                    data.Code = _verify.CodeInput.text;
+                    break;
+            }
+
+            OnAuthActionSubmitted?.Invoke(data);
         }
 
         private void SwitchPanels(CanvasGroup from, CanvasGroup to)
         {
+            from.DOKill();
+            to.DOKill();
+
+            from.interactable = false;
             from.blocksRaycasts = false;
+            to.interactable = false;
             to.blocksRaycasts = false;
 
-            var seq = DOTween.Sequence();
-            seq.Append(from.DOFade(0, _fadeDuration));
-            seq.Append(to.DOFade(1, _fadeDuration));
-            seq.OnComplete(() => 
+            from.DOFade(0f, _fadeDuration);
+            to.DOFade(1f, _fadeDuration).OnComplete(() =>
             {
-                to.blocksRaycasts = true;
                 to.interactable = true;
-                from.interactable = false;
+                to.blocksRaycasts = true;
             });
         }
 
-        private void QuitGame()
+        private void ResetAllPanels()
+        {
+            SetGroupState(_menuGroup, true);
+            SetGroupState(_settingsGroup, false);
+            SetGroupState(_loginGroup, false);
+            SetGroupState(_registerGroup, false);
+            SetGroupState(_verifyGroup, false);
+        }
+
+        private static void SetGroupState(CanvasGroup group, bool visible)
+        {
+            group.alpha = visible ? 1f : 0f;
+            group.blocksRaycasts = visible;
+            group.interactable = visible;
+        }
+
+        private static void QuitGame()
         {
             Application.Quit();
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
-            #endif
+#endif
         }
     }
 }
