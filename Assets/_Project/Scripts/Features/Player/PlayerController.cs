@@ -28,8 +28,27 @@ namespace _Project.Scripts.Features.Player
         
         public override void OnStartClient()
         {
-            _playerProvider.RegisterPlayer(this);
             _rb.simulated = true;
+
+            if (_playerProvider != null)
+            {
+                _playerProvider.RegisterPlayer(this);
+            }
+            else
+            {
+                Debug.LogWarning("[PlayerController] _playerProvider is null, retrying next frame...");
+                StartCoroutine(DelayedRegister());
+            }
+        }
+        
+        private System.Collections.IEnumerator DelayedRegister()
+        {
+            yield return null;
+    
+            if (_playerProvider != null)
+                _playerProvider.RegisterPlayer(this);
+            else
+                Debug.LogError("[PlayerController] _playerProvider всё ещё null! Проверь InjectGameObject.");
         }
         
         public override void OnStartServer()
@@ -54,6 +73,9 @@ namespace _Project.Scripts.Features.Player
             _physics.Initialize();
             _visuals.Initialize();
         }
+        
+        private void Update() => Tick();
+        private void FixedUpdate() => FixedTick(Time.fixedDeltaTime);
         
         public void Tick()
         {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using _Project.Scripts.Features.Network.Gameplay;
 using _Project.Scripts.Features.Network.Lobby;
 using _Project.Scripts.Features.Network.Server.Auth.Data;
 using _Project.Scripts.Features.Network.Server.Email;
@@ -13,7 +14,7 @@ using Zenject;
 
 namespace _Project.Scripts.Features.Network.Server.Auth
 {
-    public class GameAuthenticator : NetworkAuthenticator
+    public class GameAuthenticator : NetworkAuthenticator, IRaceRewardService
 {
     
     private IServerDatabase _db;
@@ -171,7 +172,7 @@ namespace _Project.Scripts.Features.Network.Server.Auth
 
     private void OnBuyUpgradeRequest(NetworkConnectionToClient conn, BuyUpgradeRequest msg)
     {
-        /*if (!_authenticatedUsers.TryGetValue(conn.connectionId, out var email))
+        if (!_authenticatedUsers.TryGetValue(conn.connectionId, out var email))
         {
             Debug.LogWarning($"[Server] BuyUpgradeRequest от неаутентифицированного соединения");
             return;
@@ -203,10 +204,9 @@ namespace _Project.Scripts.Features.Network.Server.Auth
         _db.UpdateCoins(email, newCoins);
         _db.AddUserUpgrade(email, msg.UpgradeId);
 
-        Debug.Log($"[Server] Апгрейд {msg.UpgradeId} куплен для {email}. Монеты: {user.Coins} → {newCoins}");*/
+        Debug.Log($"[Server] Апгрейд {msg.UpgradeId} куплен для {email}. Монеты: {user.Coins} → {newCoins}");
     }
-
-    // Остальные методы остаются без изменений...
+    
     public override void OnStartClient()
     {
         NetworkClient.RegisterHandler<AuthResponseMessage>(OnClientReceiveResponse, false);
@@ -223,5 +223,17 @@ namespace _Project.Scripts.Features.Network.Server.Auth
     public override void OnServerAuthenticate(NetworkConnectionToClient conn) { }
     public override void OnClientAuthenticate() { }
     
+    public void GrantCoinsToAllPlayers(int amount)
+    {
+        foreach (var pair in _authenticatedUsers)
+        {
+            var user = _db.GetUserByEmail(pair.Value);
+            if (user == null) continue;
+
+            int newCoins = user.Coins + amount;
+            _db.UpdateCoins(pair.Value, newCoins);
+            Debug.Log($"[Server] Монеты выданы {pair.Value}: +{amount} → {newCoins}");
+        }
+    }
 }
 }

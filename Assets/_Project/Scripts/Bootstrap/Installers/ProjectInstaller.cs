@@ -1,4 +1,5 @@
-﻿using _Project.Scripts.Features.Network.Server.Auth;
+﻿using _Project.Scripts.Features.Network;
+using _Project.Scripts.Features.Network.Server.Auth;
 using _Project.Scripts.Features.Network.Server.Email;
 using _Project.Scripts.Features.Network.Server.ServerDatabase;
 using _Project.Scripts.Features.Player.Services;
@@ -12,7 +13,7 @@ namespace _Project.Scripts.Bootstrap.Installers
 {
     public class ProjectInstaller : MonoInstaller
     {
-        [SerializeField] private NetworkManager _networkManagerPrefab;
+        [SerializeField] private GameNetworkManager _networkManagerPrefab;
         [SerializeField] private ShopDatabase _shopDatabase;
         
         public override void InstallBindings()
@@ -22,16 +23,20 @@ namespace _Project.Scripts.Bootstrap.Installers
             Container.Bind<IEmailService>().To<SmtpEmailService>().AsSingle();
             Container.Bind<ShopDatabase>().FromInstance(_shopDatabase).AsSingle();
             Container.BindInterfacesAndSelfTo<ClientPlayerDataService>().AsSingle();
-
-            // Только потом создаём префаб
+            
             var networkManager = Container.InstantiatePrefab(_networkManagerPrefab);
             Container.Bind<NetworkManager>()
-                .FromInstance(networkManager.GetComponent<NetworkManager>())
+                .FromInstance(networkManager.GetComponent<GameNetworkManager>())
                 .AsSingle();
 
             var authenticator = networkManager.GetComponentInChildren<GameAuthenticator>();
             if (authenticator != null)
+            {
                 Container.Inject(authenticator);
+                Container.Bind<IRaceRewardService>()
+                    .FromInstance(authenticator)
+                    .AsSingle();
+            }
             else
                 Debug.LogError("[Installer] GameAuthenticator не найден!");
         }

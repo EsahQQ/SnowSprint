@@ -74,6 +74,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8354ac5877d34e31b696309999ca93d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _networkManagerPrefab: {fileID: 6265557827153789601, guid: a6bd287fca54dc64fb6815650964417d, type: 3}
-  _lobbyNetworkManagerPrefab: {fileID: 14974056005975125, guid: 612b78400719dfb4cb633290b4dfa43b, type: 3}
+  _networkManagerPrefab: {fileID: -3291133676286200697, guid: a6bd287fca54dc64fb6815650964417d, type: 3}
   _shopDatabase: {fileID: 11400000, guid: 442d403359554234a8b1e240a6f7aa99, type: 2}

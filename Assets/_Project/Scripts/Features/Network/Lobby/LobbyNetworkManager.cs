@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using _Project.Scripts.Features.SceneConstants;
 using Mirror;
 using UnityEngine;
 
@@ -29,7 +30,6 @@ namespace _Project.Scripts.Features.Network.Lobby
         [ServerCallback]
         private void Update()
         {
-            // ✅ Считаем только аутентифицированных
             int authenticated = GetAuthenticatedCount();
             if (authenticated != _totalPlayers)
             {
@@ -57,8 +57,7 @@ namespace _Project.Scripts.Features.Network.Lobby
                 ReadyCount = _readyCount,
                 TotalCount = _totalPlayers
             };
-
-            // ✅ Отправляем только аутентифицированным
+            
             foreach (var conn in NetworkServer.connections.Values)
             {
                 if (conn.isAuthenticated)
@@ -74,18 +73,15 @@ namespace _Project.Scripts.Features.Network.Lobby
             if (_totalPlayers > 0 && _readyCount >= _totalPlayers)
             {
                 Debug.Log("[LNM] Все готовы!");
-                foreach (var conn in NetworkServer.connections.Values)
-                    if (conn.isAuthenticated)
-                        conn.Send(new LobbyStartGameMessage());
+                NetworkManager.singleton.ServerChangeScene(SceneNames.Game);
             }
         }
 
-        // ✅ Новый метод — вызвать после аутентификации клиента
         [ServerCallback]
         public void OnPlayerAuthenticated(NetworkConnectionToClient conn)
         {
             _totalPlayers = GetAuthenticatedCount();
-            // Отправляем текущий статус только что вошедшему игроку
+
             conn.Send(new LobbyStatusMessage
             {
                 ReadyCount = _readyCount,

@@ -1,4 +1,5 @@
-﻿using _Project.Scripts.Features.Player;
+﻿using _Project.Scripts.Features.Gameplay;
+using _Project.Scripts.Features.Player;
 using _Project.Scripts.Features.Player.Factories;
 using _Project.Scripts.Features.Player.Provider;
 using _Project.Scripts.Features.UI;
@@ -29,7 +30,15 @@ namespace _Project.Scripts.Bootstrap.Installers.Scenes
             Container.Bind<Libs.Factories.IFactory<PlayerController>>()
                 .To<NetworkPlayerFactory>() 
                 .AsSingle()
-                .WithArguments(_playerPrefab);
+                .WithArguments(_playerPrefab)
+                .NonLazy();
+            
+            Container.Bind<Transform>()
+                .WithId("SpawnPoint")
+                .FromInstance(_spawnPoint)
+                .AsSingle();
+
+            Container.BindInterfacesAndSelfTo<GameController>().AsSingle();
         }
     }
 }

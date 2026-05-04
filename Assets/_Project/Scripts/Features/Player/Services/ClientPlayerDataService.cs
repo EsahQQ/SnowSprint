@@ -68,7 +68,13 @@ namespace _Project.Scripts.Features.Player.Services
 
         public bool IsUpgradeBought(string upgradeId) => _unlockedUpgrades.Contains(upgradeId);
         
-        public void AddCoins(int amount) {  }
+        public void AddCoins(int amount)
+        {
+            if (amount <= 0) return;
+            _coins += amount;
+            OnCoinsChanged?.Invoke(_coins);
+            Debug.Log($"[ClientPlayerData] Монеты добавлены: +{amount} = {_coins}");
+        }
         public bool TrySpendCoins(int amount) => false;
     }
 }

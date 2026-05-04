@@ -20,7 +20,6 @@ namespace _Project.Scripts.Features.Network.Lobby
         public void Initialize()
         {
             NetworkClient.RegisterHandler<LobbyStatusMessage>(OnStatusReceived);
-            NetworkClient.RegisterHandler<LobbyStartGameMessage>(OnStartGame);
 
             if (NetworkServer.active)
             {
@@ -37,7 +36,6 @@ namespace _Project.Scripts.Features.Network.Lobby
         public void Dispose()
         {
             NetworkClient.UnregisterHandler<LobbyStatusMessage>();
-            NetworkClient.UnregisterHandler<LobbyStartGameMessage>();
         }
 
         private async UniTaskVoid RunAsync()
@@ -53,14 +51,6 @@ namespace _Project.Scripts.Features.Network.Lobby
         {
             Debug.Log($"[LobbyController] Статус: {msg.ReadyCount}/{msg.TotalCount}");
             _lobbyView.UpdateReadyCount(msg.ReadyCount, msg.TotalCount);
-        }
-
-        private void OnStartGame(LobbyStartGameMessage msg)
-        {
-            if (!NetworkServer.active) return;
-
-            Debug.Log("[LobbyController] Все готовы — запускаем игру");
-            NetworkManager.singleton.ServerChangeScene(SceneNames.Game);
         }
     }
 }
