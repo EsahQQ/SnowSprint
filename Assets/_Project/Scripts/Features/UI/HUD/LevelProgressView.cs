@@ -1,10 +1,6 @@
-﻿using _Project.Scripts.Features.Gameplay.Level;
-using _Project.Scripts.Features.Player;
-using _Project.Scripts.Features.Player.Provider;
+﻿using _Project.Scripts.Features.Player.Provider;
 using _Project.Scripts.Features.Services;
 using TMPro;
-using UnityEngine;
-using Zenject;
 
 namespace _Project.Scripts.Features.UI.HUD
 {
@@ -12,18 +8,24 @@ namespace _Project.Scripts.Features.UI.HUD
     {
         private readonly TextMeshProUGUI _progressText;
         private readonly IPlayerProvider _playerProvider;
-        private readonly FinishTrigger _finishTrigger;
         private LevelProgressCalculator _calculator;
         private int _lastPercent = -1;
         
-        public LevelProgressView(IPlayerProvider playerProvider, FinishTrigger finishTrigger, TextMeshProUGUI progressText)
+        // Убрали FinishTrigger из конструктора!
+        public LevelProgressView(IPlayerProvider playerProvider, TextMeshProUGUI progressText)
         {
             _playerProvider = playerProvider;
-            _finishTrigger = finishTrigger;
             _progressText = progressText;
         }
 
-        public void Init() => _calculator = new LevelProgressCalculator(_playerProvider.LocalPlayer.transform.position.x, _finishTrigger.transform.position.x);
+        public void Init()
+        {
+            if (_playerProvider.LocalPlayer == null) return;
+            float startX = _playerProvider.LocalPlayer.transform.position.x;
+            // Укажи здесь примерную длину твоего уровня по оси X (допустим 100)
+            float fakeFinishX = startX + 750f; 
+            _calculator = new LevelProgressCalculator(startX, fakeFinishX);
+        }
         
         public void Update()
         {

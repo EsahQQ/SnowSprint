@@ -52,7 +52,12 @@ namespace _Project.Scripts.Features.Network.Server.Auth.Controller
 
         public void HandlePlayClicked()
         {
-            if (_isLoggedIn) return; // уже в лобби через OnlineScene
+            // Если уже авторизованы — сразу показываем выбор "Создать/Присоединиться"
+            if (_isLoggedIn) 
+            {
+                _view.ShowSelectActionPanel(true);
+                return;
+            }
 
             if (!NetworkClient.isConnected)
             {
@@ -182,6 +187,8 @@ namespace _Project.Scripts.Features.Network.Server.Auth.Controller
                         Debug.Log("[Auth] Загружаем профиль с сервера...");
                         await _playerDataService.LoadProfileFromCloudAsync();
                         Debug.Log($"[Auth] Профиль загружен. Монеты: {_playerDataService.Coins}");
+                        
+                        _view.ShowSelectActionPanel(true);
                     }
                     else
                         Debug.LogError($"[Auth] Ошибка входа: {msg.Message}");

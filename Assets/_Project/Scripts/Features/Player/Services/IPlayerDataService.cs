@@ -13,5 +13,7 @@ namespace _Project.Scripts.Features.Player.Services
         bool IsUpgradeBought(string upgradeId);
         event Action<int> OnCoinsChanged; 
         bool TryBuyUpgrade(ShopItemConfig item);
+        bool IsLoggedIn { get; set; }
+        string Username { get; set; }
     }
 }

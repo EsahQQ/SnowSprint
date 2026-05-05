@@ -14,5 +14,6 @@ namespace _Project.Scripts.Features.UI.Menu
         void ShowRegisterPanel(bool show);
         void ShowVerifyPanel(bool show);
         void SwitchBetweenAuthPanels(AuthAction action);
+        void ShowSelectActionPanel(bool show); 
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using _Project.Scripts.Features.SceneConstants;
 using _Project.Scripts.Features.UI.Lobby;
 using Cysharp.Threading.Tasks;
 using Mirror;
@@ -19,23 +18,31 @@ namespace _Project.Scripts.Features.Network.Lobby
 
         public void Initialize()
         {
-            NetworkClient.RegisterHandler<LobbyStatusMessage>(OnStatusReceived);
+            // Подписываемся на ГЛОБАЛЬНОЕ событие из менеджера
+            GameNetworkManager.OnLobbyStatusReceived += OnStatusReceived;
 
-            if (NetworkServer.active)
-            {
-                var lnm = LobbyNetworkManager.Singleton;
-                if (lnm != null)
-                    lnm.ServerInitialize();
-                else
-                    Debug.LogError("[LobbyController] LobbyNetworkManager не найден в сцене!");
-            }
-
-            RunAsync().Forget();
+            ShowLobby(); 
+        
+            // Устанавливаем сохраненное имя комнаты
+            _lobbyView.SetRoomCode(LobbyBrowserController.LastJoinedRoomName);
         }
+
 
         public void Dispose()
         {
-            NetworkClient.UnregisterHandler<LobbyStatusMessage>();
+            // Отписываемся
+            GameNetworkManager.OnLobbyStatusReceived -= OnStatusReceived;
+        }
+
+        public void ShowLobby()
+        {
+            if (_lobbyView is MonoBehaviour mb) mb.gameObject.SetActive(true);
+            RunAsync().Forget(); 
+        }
+
+        public void HideLobby()
+        {
+            if (_lobbyView is MonoBehaviour mb) mb.gameObject.SetActive(false);
         }
 
         private async UniTaskVoid RunAsync()
@@ -49,7 +56,7 @@ namespace _Project.Scripts.Features.Network.Lobby
 
         private void OnStatusReceived(LobbyStatusMessage msg)
         {
-            Debug.Log($"[LobbyController] Статус: {msg.ReadyCount}/{msg.TotalCount}");
+            // Здесь UI обновится данными конкретно твоей комнаты
             _lobbyView.UpdateReadyCount(msg.ReadyCount, msg.TotalCount);
         }
     }

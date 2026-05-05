@@ -75,4 +75,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _networkManagerPrefab: {fileID: -3291133676286200697, guid: a6bd287fca54dc64fb6815650964417d, type: 3}
+  _lobbyManagerPrefab: {fileID: 3948735840406405867, guid: 612b78400719dfb4cb633290b4dfa43b, type: 3}
   _shopDatabase: {fileID: 11400000, guid: 442d403359554234a8b1e240a6f7aa99, type: 2}
+  _playerSettings: {fileID: 11400000, guid: d4d91ecf79a7fa442a28297880e22cc8, type: 2}

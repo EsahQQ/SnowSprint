@@ -8,4 +8,6 @@ namespace _Project.Scripts.Features.Network.Gameplay
     {
         public int CoinsEarned;
     }
+    
+    public struct ReturnToLobbyMessage : NetworkMessage {}
 }

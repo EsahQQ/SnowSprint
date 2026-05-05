@@ -7,5 +7,6 @@ namespace _Project.Scripts.Features.UI.Lobby
         UniTask ProcessLobbyAsync(); 
         void UpdateReadyCount(int readyCount, int totalCount);
         void SetInteractable(bool isInteractable);
+        void SetRoomCode(string code);
     }
 }

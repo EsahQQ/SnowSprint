@@ -9,11 +9,14 @@ namespace _Project.Scripts.Features.UI.Lobby
     {
         [SerializeField] private Button _readyButton;
         [SerializeField] private TextMeshProUGUI _readyStatusText;
+        [SerializeField] private TextMeshProUGUI _roomCodeText;
         
         private UniTaskCompletionSource _playCompletionSource;
 
         private void Start() => _readyButton.onClick.AddListener(OnReadyClicked);
 
+        public void SetRoomCode(string code) => _roomCodeText.text = code;
+        
         private void OnReadyClicked()
         {
             SetInteractable(false); 

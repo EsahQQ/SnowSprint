@@ -15,6 +15,9 @@ namespace _Project.Scripts.Features.Player.Services
 
         public event Action<int> OnCoinsChanged;
         public int Coins => _coins;
+        
+        public bool IsLoggedIn { get; set; }
+        public string Username { get; set; }
 
         private UniTaskCompletionSource _profileLoadTask;
 

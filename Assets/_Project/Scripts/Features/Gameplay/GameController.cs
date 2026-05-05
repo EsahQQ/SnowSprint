@@ -1,13 +1,9 @@
 using System;
-using System.Collections.Generic;
-using _Project.Scripts.Features.Gameplay.Level;
-using _Project.Scripts.Features.Network;
 using _Project.Scripts.Features.Network.Gameplay;
-using _Project.Scripts.Features.Network.Server.Auth;
+using _Project.Scripts.Features.Network.Lobby;
 using _Project.Scripts.Features.Player;
 using _Project.Scripts.Features.Player.Provider;
 using _Project.Scripts.Features.Player.Services;
-using _Project.Scripts.Features.SceneConstants;
 using _Project.Scripts.Features.UI;
 using _Project.Scripts.Features.UI.HUD;
 using _Project.Scripts.Features.UI.Shop;
@@ -23,83 +19,62 @@ namespace _Project.Scripts.Features.Gameplay
         private readonly IPlayerProvider _playerProvider;
         private readonly IHudView _hudView;
         private readonly IShopView _shopView;
-        private readonly FinishTrigger _finishTrigger;
         private readonly LevelProgressView _levelProgressView;
         private readonly IPlayerDataService _playerDataService;
-        private readonly Transform _spawnPoint;
-        private readonly IRaceRewardService _raceRewardService;
-        private readonly List<PlayerController> _serverSpawnedPlayers = new();
-
-        private const int CoinsPerRaceWin = 50;
-        private bool _raceFinished;
+        private readonly LobbyController _lobbyController;
 
         public GameController(
             IPlayerProvider playerProvider,
             IHudView hudView,
             IShopView shopView,
-            FinishTrigger finishTrigger,
             LevelProgressView levelProgressView,
             IPlayerDataService playerDataService,
-            [Inject(Id = "SpawnPoint")] Transform spawnPoint,
-            IRaceRewardService raceRewardService)
+            LobbyController lobbyController)
         {
             _playerProvider = playerProvider;
             _hudView = hudView;
             _shopView = shopView;
-            _finishTrigger = finishTrigger;
             _levelProgressView = levelProgressView;
             _playerDataService = playerDataService;
-            _spawnPoint = spawnPoint;
+            _lobbyController = lobbyController;
         }
 
         public void Initialize()
         {
             _playerProvider.OnLocalPlayerRegistered += OnLocalPlayerRegistered;
-            _playerProvider.OnAnyPlayerRegistered += OnAnyPlayerRegistered; 
-    
-            _finishTrigger.OnPlayerFinished += OnPlayerFinished;
             NetworkClient.RegisterHandler<RaceFinishMessage>(OnRaceFinishReceived);
         }
 
         public void Dispose()
         {
             _playerProvider.OnLocalPlayerRegistered -= OnLocalPlayerRegistered;
-            _playerProvider.OnAnyPlayerRegistered -= OnAnyPlayerRegistered;
-            _finishTrigger.OnPlayerFinished -= OnPlayerFinished;
+            
+            if (_playerProvider.LocalPlayer != null)
+                _playerProvider.LocalPlayer.OnRaceStateChangedEvent -= HandleRaceStateChanged;
+
             NetworkClient.UnregisterHandler<RaceFinishMessage>();
         }
         
         public void Tick() => _levelProgressView.Update();
-        
+
         private void OnLocalPlayerRegistered(PlayerController player)
         {
-            _hudView.Show();
-            _levelProgressView.Init();
-        }
-
-        private void OnAnyPlayerRegistered(PlayerController player)
-        {
-            Debug.Log($"[GameController] Зарегистрирован игрок. isServer: {NetworkServer.active}, isClient: {NetworkClient.active}");
-            if (NetworkServer.active)
-            {
-                player.Initialize();
-                player.transform.position = _spawnPoint != null ? _spawnPoint.position : Vector3.zero;
-                player.SetActive(true);
-                Debug.Log("[GameController] Сервер активировал гонку для игрока (IsRaceActive = true)");
-            }
-        }
-
-        private void OnPlayerFinished()
-        {
-            if (!NetworkServer.active || _raceFinished) return;
-            _raceFinished = true;
-
-            foreach (var player in _playerProvider.AllPlayers)
-                player.SetActive(false);
+            // Подписываемся на изменение состояния (Гонка началась/закончилась)
+            player.OnRaceStateChangedEvent += HandleRaceStateChanged;
             
-            _raceRewardService.GrantCoinsToAllPlayers(CoinsPerRaceWin);
+            // Если игрок подключился, а гонка уже идет
+            if (player.IsRaceActive) HandleRaceStateChanged(true);
+        }
 
-            NetworkServer.SendToAll(new RaceFinishMessage { CoinsEarned = CoinsPerRaceWin });
+        private void HandleRaceStateChanged(bool isActive)
+        {
+            if (isActive)
+            {
+                // Гонка началась!
+                _lobbyController.HideLobby();
+                _hudView.Show();
+                _levelProgressView.Init();
+            }
         }
 
         private void OnRaceFinishReceived(RaceFinishMessage msg)
@@ -109,16 +84,20 @@ namespace _Project.Scripts.Features.Gameplay
 
         private async UniTaskVoid HandleFinishAsync(int coinsEarned)
         {
-            Debug.Log($"[GameController] Получено монет за финиш: {coinsEarned}");
-            _playerDataService.AddCoins(coinsEarned);
-            await _shopView.ProcessShopAsync();
+            _playerDataService.AddCoins(coinsEarned); 
+            _hudView.Hide(); 
             
-            _hudView.Hide();
-
-            if (NetworkServer.active && NetworkClient.isConnected)
-                NetworkManager.singleton.ServerChangeScene(SceneNames.LobbyMenu);
-            else if (NetworkClient.isConnected)
-                NetworkManager.singleton.StopClient();
+            await _shopView.ProcessShopAsync(); 
+            
+            if (NetworkClient.isConnected)
+            {
+                // 1. Говорим серверу, что мы закончили (чтобы он нас телепортировал/очистил)
+                NetworkClient.Send(new ReturnToLobbyMessage());
+                
+                // 2. ЗАГРУЖАЕМ ГЛАВНОЕ МЕНЮ
+                // Это уничтожит текущий LobbyController и при следующем входе всё будет 0/0
+                UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+            }
         }
     }
 }

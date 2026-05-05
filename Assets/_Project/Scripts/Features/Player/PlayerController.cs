@@ -1,3 +1,4 @@
+using System;
 using _Project.Scripts.Features.Player.PlayerInput;
 using _Project.Scripts.Features.Player.Provider;
 using Mirror;
@@ -16,7 +17,10 @@ namespace _Project.Scripts.Features.Player
 
         private IPlayerProvider _playerProvider;
         
-        [SyncVar] public bool IsRaceActive;
+        public event Action<bool> OnRaceStateChangedEvent;
+        
+        [SyncVar(hook = nameof(OnRaceStateChanged))] 
+        public bool IsRaceActive;
         
         private float _serverMaxSpeed = 10f;
         private float _serverAcceleration = 2f;
@@ -28,7 +32,7 @@ namespace _Project.Scripts.Features.Player
         
         private void Awake()
         {
-            var context = FindObjectOfType<Zenject.SceneContext>();
+            var context = FindFirstObjectByType<SceneContext>();
             if (context != null)
                 context.Container.InjectGameObject(gameObject);
         }
@@ -61,8 +65,9 @@ namespace _Project.Scripts.Features.Player
         
         public override void OnStartServer()
         {
-            _rb.bodyType = RigidbodyType2D.Dynamic;
+            _rb.bodyType = RigidbodyType2D.Kinematic;
             _rb.simulated = true;
+            _rb.linearVelocity = Vector2.zero; 
     
             _serverMaxSpeed = 25f;
             _serverAcceleration = 15f;
@@ -75,6 +80,12 @@ namespace _Project.Scripts.Features.Player
 
         public override void OnStopClient() => _playerProvider?.UnregisterPlayer(this);
 
+        private void OnRaceStateChanged(bool oldVal, bool newVal)
+        {
+            if (isLocalPlayer)
+                OnRaceStateChangedEvent?.Invoke(newVal);
+        }
+        
         public void Initialize()
         {
             _physics.Initialize();
@@ -120,7 +131,17 @@ namespace _Project.Scripts.Features.Player
             if (isServer)
             {
                 IsRaceActive = isActive;
-                _physics.ResetVelocity();
+                
+                if (isActive)
+                {
+                    _rb.bodyType = RigidbodyType2D.Dynamic;
+                    _physics.ResetVelocity();
+                }
+                else
+                {
+                    _rb.bodyType = RigidbodyType2D.Kinematic;
+                    _physics.ResetVelocity();
+                }
             }
         }
 

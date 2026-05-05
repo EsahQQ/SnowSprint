@@ -4,14 +4,12 @@ namespace _Project.Scripts.Features.SceneConstants
     public static class SceneNames
     {
         public const string MainMenu = "MainMenu";
-        public const string Game = "Game";
-        public const string LobbyMenu = "LobbyMenu";
+        public const string OnlineScene = "OnlineScene";
 
         public static readonly ReadOnlyCollection<string> All = new ReadOnlyCollection<string>(new[]
         {
             MainMenu,
-            Game,
-            LobbyMenu,
+            OnlineScene,
         });
     }
 }

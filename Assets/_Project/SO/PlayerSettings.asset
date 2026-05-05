@@ -16,8 +16,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 16
   RayLength: 2.5
-  BaseMaxSpeed: 15
-  BaseAcceleration: 10
+  BaseMaxSpeed: 10
+  BaseAcceleration: 4
   BaseBoostForce: 2
   BaseJumpForce: 2
   RotationSpeed: 10
