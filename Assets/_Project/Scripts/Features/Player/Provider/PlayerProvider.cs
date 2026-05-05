@@ -14,14 +14,16 @@ namespace _Project.Scripts.Features.Player.Provider
 
         public void RegisterPlayer(PlayerController player)
         {
-            _allPlayers.Add(player);
+            if (!_allPlayers.Contains(player))
+                _allPlayers.Add(player);
+    
             OnAnyPlayerRegistered?.Invoke(player);
-
-            if (player.isLocalPlayer)
-            {
-                LocalPlayer = player;
-                OnLocalPlayerRegistered?.Invoke(player);
-            }
+        }
+        
+        public void SetLocalPlayer(PlayerController player)
+        {
+            LocalPlayer = player;
+            OnLocalPlayerRegistered?.Invoke(player);
         }
 
         public void UnregisterPlayer(PlayerController player)

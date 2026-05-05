@@ -15,9 +15,9 @@ MonoBehaviour:
   GroundLayer:
     serializedVersion: 2
     m_Bits: 16
-  RayLength: 1.5
-  BaseMaxSpeed: 10
-  BaseAcceleration: 2
+  RayLength: 2.5
+  BaseMaxSpeed: 15
+  BaseAcceleration: 10
   BaseBoostForce: 2
-  BaseJumpForce: 5
+  BaseJumpForce: 2
   RotationSpeed: 10

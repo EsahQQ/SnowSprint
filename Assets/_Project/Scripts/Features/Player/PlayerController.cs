@@ -18,52 +18,59 @@ namespace _Project.Scripts.Features.Player
         
         [SyncVar] public bool IsRaceActive;
         
-        private float _serverMaxSpeed;
-        private float _serverAcceleration;
-        private float _serverBoostForce;
-        private float _serverJumpForce;
+        private float _serverMaxSpeed = 10f;
+        private float _serverAcceleration = 2f;
+        private float _serverJumpForce = 5f; 
+        private float _serverBoostForce = 5f;
 
         [Inject]
         public void Construct(IPlayerProvider playerProvider) => _playerProvider = playerProvider;
         
+        private void Awake()
+        {
+            var context = FindObjectOfType<Zenject.SceneContext>();
+            if (context != null)
+                context.Container.InjectGameObject(gameObject);
+        }
+        
         public override void OnStartClient()
         {
-            _rb.simulated = true;
+            if (!isServer) 
+            {
+                _rb.bodyType = RigidbodyType2D.Kinematic;
+                _rb.simulated = true;
+            }
 
             if (_playerProvider != null)
-            {
                 _playerProvider.RegisterPlayer(this);
-            }
-            else
-            {
-                Debug.LogWarning("[PlayerController] _playerProvider is null, retrying next frame...");
-                StartCoroutine(DelayedRegister());
-            }
         }
-        
-        private System.Collections.IEnumerator DelayedRegister()
-        {
-            yield return null;
-    
-            if (_playerProvider != null)
-                _playerProvider.RegisterPlayer(this);
-            else
-                Debug.LogError("[PlayerController] _playerProvider всё ещё null! Проверь InjectGameObject.");
-        }
-        
-        public override void OnStartServer()
-        {
-            _rb.bodyType = RigidbodyType2D.Dynamic;
-        }
+
 
         public override void OnStartLocalPlayer()
         {
+            if (_playerProvider != null)
+                _playerProvider.SetLocalPlayer(this);
+
             _stats.Initialize();
             CmdSubmitStats(
                 _stats.CurrentMaxSpeed, 
                 _stats.CurrentAcceleration, 
                 _stats.CurrentBoostForce, 
                 _stats.CurrentJumpForce);
+        }
+        
+        public override void OnStartServer()
+        {
+            _rb.bodyType = RigidbodyType2D.Dynamic;
+            _rb.simulated = true;
+    
+            _serverMaxSpeed = 25f;
+            _serverAcceleration = 15f;
+            _serverJumpForce = 12f;
+            _serverBoostForce = 15f;
+    
+            if (_playerProvider != null)
+                _playerProvider.RegisterPlayer(this);
         }
 
         public override void OnStopClient() => _playerProvider?.UnregisterPlayer(this);
@@ -74,7 +81,11 @@ namespace _Project.Scripts.Features.Player
             _visuals.Initialize();
         }
         
-        private void Update() => Tick();
+        private void Update()
+        {
+            Tick();
+        }
+
         private void FixedUpdate() => FixedTick(Time.fixedDeltaTime);
         
         public void Tick()
@@ -122,12 +133,14 @@ namespace _Project.Scripts.Features.Player
             _serverAcceleration = acceleration;
             _serverBoostForce = boost;
             _serverJumpForce = jump;
+            Debug.Log($"[Player-Server] Получены статы от клиента: Speed={maxSpeed}, Accel={acceleration}");
         }
 
         [Command]
         private void CmdRequestJump()
         {
             if (!IsRaceActive) return;
+            Debug.Log($"[Server] Прыжок! Земля: {_physics.IsGrounded}, Сила: {_serverJumpForce}");
             _physics.Jump(_serverJumpForce);
         }
 
@@ -135,6 +148,7 @@ namespace _Project.Scripts.Features.Player
         private void CmdRequestBoost()
         {
             if (!IsRaceActive) return;
+            Debug.Log($"[Server] Буст! Земля: {_physics.IsGrounded}, Сила: {_serverBoostForce}");
             _physics.Boost(_serverBoostForce);
         }
 

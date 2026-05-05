@@ -1,6 +1,5 @@
 ﻿using _Project.Scripts.Features.Gameplay;
 using _Project.Scripts.Features.Player;
-using _Project.Scripts.Features.Player.Factories;
 using _Project.Scripts.Features.Player.Provider;
 using _Project.Scripts.Features.UI;
 using _Project.Scripts.Features.UI.HUD;
@@ -26,12 +25,6 @@ namespace _Project.Scripts.Bootstrap.Installers.Scenes
             Container.Bind<IShopView>().FromInstance(_shopView).AsSingle();
             
             Container.Bind<IPlayerProvider>().To<PlayerProvider>().AsSingle();
-            
-            Container.Bind<Libs.Factories.IFactory<PlayerController>>()
-                .To<NetworkPlayerFactory>() 
-                .AsSingle()
-                .WithArguments(_playerPrefab)
-                .NonLazy();
             
             Container.Bind<Transform>()
                 .WithId("SpawnPoint")

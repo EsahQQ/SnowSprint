@@ -11,6 +11,7 @@ namespace _Project.Scripts.Features.Player.Provider
         event Action<PlayerController> OnAnyPlayerRegistered;
         
         void RegisterPlayer(PlayerController player);
+        void SetLocalPlayer(PlayerController player);
         void UnregisterPlayer(PlayerController player);
     }
 }

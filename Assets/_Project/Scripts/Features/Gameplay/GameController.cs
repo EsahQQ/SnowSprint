@@ -21,7 +21,6 @@ namespace _Project.Scripts.Features.Gameplay
     public class GameController : IInitializable, IDisposable, ITickable
     {
         private readonly IPlayerProvider _playerProvider;
-        private readonly Libs.Factories.IFactory<PlayerController> _playerFactory;
         private readonly IHudView _hudView;
         private readonly IShopView _shopView;
         private readonly FinishTrigger _finishTrigger;
@@ -36,7 +35,6 @@ namespace _Project.Scripts.Features.Gameplay
 
         public GameController(
             IPlayerProvider playerProvider,
-            Libs.Factories.IFactory<PlayerController> playerFactory,
             IHudView hudView,
             IShopView shopView,
             FinishTrigger finishTrigger,
@@ -46,7 +44,6 @@ namespace _Project.Scripts.Features.Gameplay
             IRaceRewardService raceRewardService)
         {
             _playerProvider = playerProvider;
-            _playerFactory = playerFactory;
             _hudView = hudView;
             _shopView = shopView;
             _finishTrigger = finishTrigger;
@@ -58,23 +55,18 @@ namespace _Project.Scripts.Features.Gameplay
         public void Initialize()
         {
             _playerProvider.OnLocalPlayerRegistered += OnLocalPlayerRegistered;
+            _playerProvider.OnAnyPlayerRegistered += OnAnyPlayerRegistered; 
+    
             _finishTrigger.OnPlayerFinished += OnPlayerFinished;
             NetworkClient.RegisterHandler<RaceFinishMessage>(OnRaceFinishReceived);
-
-            if (NetworkServer.active)
-                GameNetworkManager.OnServerAddPlayerCallback += SpawnPlayerForConnection;
         }
 
         public void Dispose()
         {
             _playerProvider.OnLocalPlayerRegistered -= OnLocalPlayerRegistered;
+            _playerProvider.OnAnyPlayerRegistered -= OnAnyPlayerRegistered;
             _finishTrigger.OnPlayerFinished -= OnPlayerFinished;
             NetworkClient.UnregisterHandler<RaceFinishMessage>();
-
-            if (NetworkServer.active)
-                GameNetworkManager.OnServerAddPlayerCallback -= SpawnPlayerForConnection;
-            
-            _serverSpawnedPlayers.Clear();
         }
         
         public void Tick() => _levelProgressView.Update();
@@ -85,19 +77,16 @@ namespace _Project.Scripts.Features.Gameplay
             _levelProgressView.Init();
         }
 
-        private void SpawnPlayerForConnection(NetworkConnectionToClient conn)
+        private void OnAnyPlayerRegistered(PlayerController player)
         {
-            var player = _playerFactory.Create();
-            player.transform.position = _spawnPoint != null ? _spawnPoint.position : Vector3.zero;
-            player.Initialize();
-            _serverSpawnedPlayers.Add(player);
-
-            NetworkServer.AddPlayerForConnection(conn, player.gameObject);
-            
-            foreach (var p in _serverSpawnedPlayers)
-                p.SetActive(true);
-
-            Debug.Log($"[GameController] Заспавнен игрок connId={conn.connectionId}, всего={_serverSpawnedPlayers.Count}");
+            Debug.Log($"[GameController] Зарегистрирован игрок. isServer: {NetworkServer.active}, isClient: {NetworkClient.active}");
+            if (NetworkServer.active)
+            {
+                player.Initialize();
+                player.transform.position = _spawnPoint != null ? _spawnPoint.position : Vector3.zero;
+                player.SetActive(true);
+                Debug.Log("[GameController] Сервер активировал гонку для игрока (IsRaceActive = true)");
+            }
         }
 
         private void OnPlayerFinished()

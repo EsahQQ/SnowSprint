@@ -182,8 +182,6 @@ namespace _Project.Scripts.Features.Network.Server.Auth.Controller
                         Debug.Log("[Auth] Загружаем профиль с сервера...");
                         await _playerDataService.LoadProfileFromCloudAsync();
                         Debug.Log($"[Auth] Профиль загружен. Монеты: {_playerDataService.Coins}");
-
-                        // Переход в лобби Mirror делает сам через OnlineScene после ServerAccept
                     }
                     else
                         Debug.LogError($"[Auth] Ошибка входа: {msg.Message}");

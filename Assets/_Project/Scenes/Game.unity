@@ -3187,9 +3187,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Core.GameInstaller
   _finishTrigger: {fileID: 1062955814}
-  _shopDatabase: {fileID: 11400000, guid: 442d403359554234a8b1e240a6f7aa99, type: 2}
   _playerSettings: {fileID: 11400000, guid: d4d91ecf79a7fa442a28297880e22cc8, type: 2}
   _progressText: {fileID: 388286979}
+  _virtualCamera: {fileID: 1053370405}
 --- !u!114 &1859992698
 MonoBehaviour:
   m_ObjectHideFlags: 0

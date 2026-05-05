@@ -1,16 +1,24 @@
 using System;
+using _Project.Scripts.Features.SceneConstants;
 using Mirror;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace _Project.Scripts.Features.Network
 {
     public class GameNetworkManager : NetworkManager
     {
-        public static event Action<NetworkConnectionToClient> OnServerAddPlayerCallback;
-
-        public override void OnServerAddPlayer(NetworkConnectionToClient conn)
+        public override void OnClientSceneChanged()
         {
-            OnServerAddPlayerCallback?.Invoke(conn);
+            base.OnClientSceneChanged();
+            
+            if (SceneManager.GetActiveScene().name == SceneNames.Game)
+            {
+                if (NetworkClient.isConnected)
+                {
+                    NetworkClient.AddPlayer();
+                }
+            }
         }
     }
 }

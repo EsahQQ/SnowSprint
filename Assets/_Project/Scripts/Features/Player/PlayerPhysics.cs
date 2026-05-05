@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using _Project.Scripts.Features.Player.Settings;
+using UnityEngine;
 using Zenject;
-using PlayerSettings = _Project.Scripts.Features.Player.Settings.PlayerSettings;
 
 namespace _Project.Scripts.Features.Player
 {
@@ -23,11 +23,10 @@ namespace _Project.Scripts.Features.Player
 
         public void CheckGround()
         {
-            var hit = Physics2D.Raycast(transform.position, Vector2.down, _playerSettings.RayLength, _playerSettings.GroundLayer);
+            Vector2 origin = transform.position;
+            var hit = Physics2D.Raycast(origin, Vector2.down, _playerSettings.RayLength, _playerSettings.GroundLayer);
             IsGrounded = hit.collider != null;
             GroundNormal = IsGrounded ? hit.normal : Vector2.up;
-            
-            Debug.DrawRay(transform.position, Vector2.down * _playerSettings.RayLength, IsGrounded ? Color.green : Color.red);
         }
 
         private void AutoMove(float currentMaxSpeed, float currentAcceleration)
